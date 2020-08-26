@@ -25,4 +25,4 @@
  
 **Disclaimer**
  
- - The drivers are written for the use of the working group, hence all the parsing is not verfied and the package is done in a prototype fashion. Feel free to correct it if there are any issues
+ - The drivers are written for the use of the working group, hence the data used by my working group is only verified, all the parsing is not verfied and the package is done in a prototype fashion. Feel free to correct it if there are any issues
