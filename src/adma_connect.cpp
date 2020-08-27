@@ -44,7 +44,7 @@ int main(int argc, char **argv)
   {
     ROS_INFO("No parameters");
   }
-  const unsigned short port = 1211;//static_cast<unsigned short>(std::strtoul(portNum.c_str(), NULL, 0));
+  const unsigned short port = static_cast<unsigned short>(std::strtoul(portNum.c_str(), NULL, 0));
   /* Initiliaze publisher */
   ros::Publisher  publisher_  = nh.advertise<adma_connect::Adma>("adma_data",1);
 
