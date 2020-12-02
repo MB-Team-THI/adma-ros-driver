@@ -64,7 +64,8 @@ include_directories(
 
 ## Declare a cpp library
 add_library(${PROJECT_NAME}_core
-   src/adma_parse.cpp
+  include/adma_connect/adma_parse.h
+  src/adma_parse.cpp
 )
 
 add_executable(${PROJECT_NAME} src/adma_connect.cpp)
@@ -74,6 +75,9 @@ add_executable(${PROJECT_NAME} src/adma_connect.cpp)
 add_dependencies(${PROJECT_NAME}_core
   ${catkin_EXPORTED_TARGETS}
 )
+
+add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
+
 
 add_dependencies(${PROJECT_NAME}
   ${catkin_EXPORTED_TARGETS}

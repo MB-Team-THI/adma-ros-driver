@@ -5,7 +5,7 @@
   * @date 06/08/2020
   * */
 
-#include "adma_connect/adma_parse.h"
+#include "../include/adma_connect/adma_parse.h"
 
 
 /// \file
