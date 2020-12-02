@@ -8,7 +8,7 @@
 
 - Open a terminal in a folder of choice
 - mkdir catkin_ws && cd catkin_ws && mkdir src && cd src
-- git clone https://github.com/lab176344/adma_ros_driver.git
+- git clone https://github.com/Black-Forest-Formula-Team/bfft_adma_ros_driver.git
 - cd .. 
 - catkin_make
 - source devel/setup.bash
