@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
+import rospy
+from std_msgs.msg import String
+
+import cantools
+import can
+
+def receive_all():
+    """Receive all CAN Data from Adma and stream it to a topic"""
+    
+    # get parameters from launch file
+    path_to_dbc_file = rospy.get_param('/adma_can_connect/path_to_dbc_file')
+    can_bitrate = rospy.get_param('/adma_can_connect/can_bitrate')
+    can_channel = rospy.get_param('/adma_can_connect/can_channel')
+    can_bustype = rospy.get_param('/adma_can_connect/can_bustype')
+
+    dbc_file = cantools.database.load_file(path_to_dbc_file)    # load dbc file for CAN message decoding
+
+    bus = can.interface.Bus(bustype=can_bustype, channel=can_channel, bitrate=int(can_bitrate))
+    
+    pub = rospy.Publisher('can_data', String, queue_size=10)
+    rospy.init_node('can_bus_reader', anonymous=True)
+    rate = rospy.Rate(100) # 10hz
+    
+    while not rospy.is_shutdown():
+                    
+        msg = bus.recv(1)
+        if msg is not None:
+            pub.publish(str(dbc_file.decode_message(msg.arbitration_id, msg.data)))
+            #db.decode_message(msg.arbitration_id, msg.data)
+        rate.sleep()
+
+if __name__ == '__main__':
+    try:
+        receive_all()
+    except rospy.ROSInterruptException:
+        pass

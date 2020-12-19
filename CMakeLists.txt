@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(adma_connect)
 
-## Compile as C++11, supported in ROS Kinetic and newer
+## Compile as C++11, supported in ROS melodic and newer
 add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
@@ -10,6 +10,7 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED 
   COMPONENTS
     roscpp
+    rospy
     std_msgs
     message_generation
   )
@@ -17,6 +18,15 @@ find_package(catkin REQUIRED
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system date_time)
 
+set (LIB_DIR_LOCATION ${NAME}/lib) 
+find_library(Can NAMES can PATHS ${LIB_DIR_LOCATION}) 
+set(INCLUDE_DIRS ${NAME}/include)  
+
+set (LIB_DIR_LOCATION ${NAME}/lib) 
+find_library(Cantools NAMES cantools PATHS ${LIB_DIR_LOCATION}) 
+set(INCLUDE_DIRS ${NAME}/include)  
+
+catkin_python_setup()
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
@@ -68,7 +78,10 @@ add_library(${PROJECT_NAME}_core
   src/adma_parse.cpp
 )
 
-add_executable(${PROJECT_NAME} src/adma_connect.cpp)
+add_executable(${PROJECT_NAME} 
+  src/adma_connect.cpp
+  src/adma_can_connect
+)
 
 
 ## Add dependencies to exported targets, like ROS msgs or srvs
