@@ -3,37 +3,106 @@
 
 import rospy
 from std_msgs.msg import String
+from sensor_msgs.msg import NavSatFix, NavSatStatus
+from can import Message
+from can_msgs.msg import Frame
+from typing import Optional
+from geometry_msgs.msg import Quaternion
 
+import pandas as pd
 import cantools
 import can
+from rospy_message_converter import message_converter
 
-def receive_all():
-    """Receive all CAN Data from Adma and stream it to a topic"""
+def convert_msgs(can_id, decoded_msgs):
+    msgs=pd.DataFrame.from_dict([decoded_msgs])
+    can_identifier=str(can_id)
     
+    pub_gps = rospy.Publisher('imu/gps_data',NavSatFix, queue_size=10)
+    pub_quat = rospy.Publisher('imu/quaternion_data',Quaternion, queue_size=10)
+    
+    def Quaternions():
+        #print(can_identifier+" Quaternion data = ")
+        quat_tf = [0, 1, 0, 0]
+        quat_msg = Quaternion(quat_tf[0], quat_tf[1], quat_tf[2], quat_tf[3])
+        pub_quat.publish(quat_msg)
+ 
+    def GPS_Location():
+        ''' Extract GPS data from CAN frame and publish it as ros message on topic
+        https://python.hotexamples.com/site/file?hash=0xdc5e344f55e2dff36b129f42f91321be202db7a5f5a933199cd91423ae3e7b10&fullName=Terminus-master/groovy/GPS.py&project=bnitkin/Terminus
+        '''
+        #print(msgs.loc[:,:])
+        gps_msg = NavSatFix()
+        
+        Fix = NavSatStatus()
+        #Fix.status = GPS.mode
+        #Fix.service = GPS.numSat
+    
+        gps_msg.header.stamp = rospy.Time.now()
+        gps_msg.status = Fix
+        gps_msg.latitude = msgs.loc[0,"GPS_Lat"]
+        gps_msg.longitude = msgs.loc[0,"GPS_Long"]
+        #msg.altitude = GPS.alt
+        gps_msg.position_covariance = (0, 0, 0, 0, 0, 0, 0, 0, 0)
+        gps_msg.position_covariance_type = 0
+        #covariance_type = 0 unknown
+		#                = 1 approximated
+		#                = 2 diagonal known
+		#                = 3 known
+        #print(can_identifier+" GPS Location data = ")
+        pub_gps.publish(gps_msg)
+
+ 
+    def AnalogIn():
+        print(can_identifier+" Analog Input data = ", msgs)
+        print(msgs.loc[:,"AN1"])
+ 
+    def default():
+        ''' If user enters invalid option then this method will be called '''
+        print("Unkonwn ID "+can_identifier)
+        #print(msgs)
+
+    def get_id(can_id):
+        switcher={
+            140 : Quaternions, # random
+            141 : GPS_Location,
+            184 : AnalogIn
+        }
+        func=switcher.get(can_id,default)
+        return func()
+    
+    get_id(can_id)
+        
+
+def decode_Adma_CAN_data():
+    """Receive all Adma CAN Data from ROS Channel received_messages, decode it using the DBC File defined
+    in the Launch file and stream it to topic adma_CAN_data"""
+
     # get parameters from launch file
     path_to_dbc_file = rospy.get_param('/adma_can_connect/path_to_dbc_file')
-    can_bitrate = rospy.get_param('/adma_can_connect/can_bitrate')
-    can_channel = rospy.get_param('/adma_can_connect/can_channel')
-    can_bustype = rospy.get_param('/adma_can_connect/can_bustype')
-
-    dbc_file = cantools.database.load_file(path_to_dbc_file)    # load dbc file for CAN message decoding
-
-    bus = can.interface.Bus(bustype=can_bustype, channel=can_channel, bitrate=int(can_bitrate))
     
-    pub = rospy.Publisher('can_data', String, queue_size=10)
-    rospy.init_node('can_bus_reader', anonymous=True)
-    rate = rospy.Rate(100) # 10hz
+    dbc_file = open(path_to_dbc_file, "r", encoding="iso-8859-1")
+    db = cantools.database.load(dbc_file)
+
     
-    while not rospy.is_shutdown():
-                    
-        msg = bus.recv(1)
-        if msg is not None:
-            pub.publish(str(dbc_file.decode_message(msg.arbitration_id, msg.data)))
-            #db.decode_message(msg.arbitration_id, msg.data)
-        rate.sleep()
+    def callback(Frame):
+        output = db.decode_message(Frame.id, Frame.data)
+        #translated_CAN_messages = (Frame.id, output)
+        if output is not None:
+            convert_msgs(can_id=Frame.id, decoded_msgs=output)
+        #rospy.loginfo("\n"+rospy.get_caller_id() + " Translated Adma data: %s ", translated_CAN_messages)
+        #pub.publish(str(translated_CAN_messages))
+
+    rospy.init_node('adma_CAN_msg_translator',anonymous=True)
+    rospy.Subscriber("received_messages", Frame, callback)
+    rospy.spin() 
+
+
 
 if __name__ == '__main__':
     try:
-        receive_all()
+        decode_Adma_CAN_data()
+
     except rospy.ROSInterruptException:
         pass
+    
