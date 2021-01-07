@@ -1,13 +1,11 @@
 <launch> 
    <!-- start node -->
 	<node name="adma_can_connect" type="adma_can_connect" pkg="adma_connect" output="screen" args="">
-      <param name="path_to_dbc_file" value='/SSD_512/Docs_SSD/ADMA_CAN-DBs/ADMA_CAN-DBC_ADMA_v3.2_v30.2.0.0.dbc' />
+      <param name="path_to_adma_dbc_file" value='/SSD_512/Docs_SSD/ADMA_CAN-DBs/ADMA_CAN-DBC_ADMA_v3.2_v30.2.0.0.dbc' />
          <!--    Format '/ADMA_CAN-DBs/ADMA_CAN-DBC_ADMA_v3.2_v30.2.0.0.dbc'     -->
-      <param name="can_bitrate" value='1000000' />
-         <!--    Format '1000000'     -->
-      <param name="can_channel" value='can0' />
-         <!--    Format 'can0'     -->
-      <param name="can_bustype" value='socketcan' />
+      <param name="path_to_sensor_dbc_file" value='/SSD_512/Docs_SSD/ADMA_CAN-DBs/ADMA_CAN-DBC_ADMA_v3.2_v30.2.0.0.dbc' />
+         <!--    Format 'ToBeDone/File.dbc'     -->
+      <param name="base_id_adma" value='100' />
          <!--    Format 'socketcan'     -->
    </node>
 </launch>

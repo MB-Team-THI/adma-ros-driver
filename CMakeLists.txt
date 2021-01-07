@@ -30,6 +30,10 @@ set (LIB_DIR_LOCATION ${NAME}/lib)
 find_library(Rospy_message_converter NAMES rospy_message_converter PATHS ${LIB_DIR_LOCATION}) 
 set(INCLUDE_DIRS ${NAME}/include)  
 
+set (LIB_DIR_LOCATION ${NAME}/lib) 
+find_library(Transforms3d NAMES transforms3d PATHS ${LIB_DIR_LOCATION}) 
+set(INCLUDE_DIRS ${NAME}/include)
+
 catkin_python_setup()
 ################################################
 ## Declare ROS messages, services and actions ##
