@@ -1,0 +1,328 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
+import rospy
+from std_msgs.msg import String
+from sensor_msgs.msg import NavSatFix, NavSatStatus, Imu
+from can_msgs.msg import Frame
+from geometry_msgs.msg import Quaternion, Vector3
+
+import transforms3d
+import time
+
+import pandas as pd
+import cantools
+
+class GPSClass():
+    """gps class for holding lat and long as well as status, altitude and corresponding time_stamp
+    in needed format for standard ros nav message"""
+
+    def __init__(self, lat=0.0, lon=0.0, alt=0.0, time_stamp=1.0):
+        super(GPSClass, self).__init__()
+        # self = NavSatFix()
+        self.__status = NavSatStatus()
+        self.__latitude = round(float(lat), 6)
+        self.__longitude = round(float(lon), 6)
+        self.__altitude = round(float(alt), 6)
+        self.__time_secs = round(time.time())
+        self.__time_nsecs = round(time.time())
+        self.__position_covariance = (0, 0, 0, 0, 0, 0, 0, 0, 0)
+        self.__position_covariance_type = 0
+
+    def set_status(self, status):
+        self.__status = status
+    
+    def set_lat_long(self, latitude, longitude):
+        self.__latitude = latitude
+
+    def set_altitude(self, altitude):
+        self.__altitude = altitude
+
+    def set_time(self, secs, nsecs):
+        self.__time_secs = secs
+        self.__time_nsecs = nsecs
+        
+    def __get_status(self):
+        return self.__status 
+        
+    def __get_latitude(self):
+        return self.__latitude
+
+    def __get_longitude(self):
+        return self.__longitude
+
+    def __get_altitude(self):
+        return self.__altitude
+
+    def __get_secs(self):
+        return self.__time_secs
+    
+    def __get_nsecs(self):
+        return self.__time_nsecs
+    
+    def publish_gps_data(self):
+        ''' Extract GPS data from CAN frame and publish it as ros message on topic
+            https://python.hotexamples.com/site/file?hash=0xdc5e344f55e2dff36b129f42f91321be202db7a5f5a933199cd91423ae3e7b10&fullName=Terminus-master/groovy/GPS.py&project=bnitkin/Terminus
+        '''
+        gps_msg = NavSatFix()
+        Fix = NavSatStatus()
+
+        # Fix.status = self.mode
+        # Fix.service = self.numSat
+        # gps_msg.status = Fix
+        
+        # according to ADMA documentation, INS_Lat_Rel and INS_Long_Rel "best position available in sense of precision"
+        gps_msg.altitude = self.__get_altitude()
+        gps_msg.header.stamp.secs = self.__get_secs()
+        gps_msg.header.stamp.nsecs = self.__get_nsecs()                  # TBD
+        gps_msg.latitude = self.__get_latitude()
+        gps_msg.longitude = self.__get_longitude()
+                # covariance_type = 0 unknown
+                #                = 1 approximated
+                #                = 2 diagonal known
+                #                = 3 known
+        return gps_msg
+
+class ImuClass():
+    """gps class for holding lat and long as well as status, altitude and corresponding time_stamp
+    in needed format for standard ros nav message"""
+
+    def __init__(self):
+        super(ImuClass, self).__init__()
+        self.__quat_x=0.0
+        self.__quat_y=0.0
+        self.__quat_z=0.0
+        self.__quat_w=1.0
+        
+        # Angular Velocity - Body Rates of ADMA
+        self.__ang_x=0.0
+        self.__ang_y=0.0
+        self.__ang_z=0.0
+        
+        # Linear Acceleration - Accel Body of Adma
+        self.__lin_x=0.0
+        self.__lin_y=0.0
+        self.__lin_z=0.0      
+
+    def set_quaternions(self, x,y,z,w):
+        self.__quat_x=x
+        self.__quat_y=y
+        self.__quat_z=z
+        self.__quat_w=w
+        
+    def set_angular_velocity(self, x,y,z):
+        self.__ang_x=x
+        self.__ang_y=y
+        self.__ang_z=z
+
+    def set_linear_acceleration(self, x,y,z):
+        self.__lin_x=x
+        self.__lin_y=y
+        self.__lin_z=z
+
+    def __get_quaternions(self):
+        return Quaternion(self.__quat_x, self.__quat_y, self.__quat_z, self.__quat_w)
+        
+    def __get_angular_velocity(self):
+        return Vector3(self.__ang_x, self.__ang_y, self.__ang_z)
+
+    def __get_linear_acceleration(self):
+        return Vector3(self.__lin_x, self.__lin_y, self.__lin_z)
+
+    def publish_imu_data(self):
+        imu_msg=Imu()
+        imu_msg.orientation=self.__get_quaternions()
+        #imu_msg.orientation_covariance= 
+        imu_msg.angular_velocity=self.__get_angular_velocity()
+        #imu_msg.angular_velocity_covariance=
+        imu_msg.linear_acceleration=self.__get_linear_acceleration()
+        #imu_msg.linear_acceleration_covariance=
+        return imu_msg
+
+class StatusErrorClass():
+    """gps class for holding lat and long as well as status, altitude and corresponding time_stamp
+    in needed format for standard ros nav message"""
+
+    def __init__(self):
+        super(StatusErrorClass, self).__init__()
+        self.__status_gps_mode=0
+        self.__status_standstill=0
+        self.__status_skidding=0
+        self.__status_trig_gps=0
+        self.__status_signal_IN3=0
+        self.__status_signal_IN2=0
+        self.__status_signal_IN1=0
+        self.__status_alignment=0
+        self.__status_ahrs_ins=0
+        self.__status_deadreckoning=0
+        self.__status_synclock=0
+        self.__status_evk_activ=0
+        self.__status_evk_estimates=0
+        self.__status_tilt=0
+        self.__status_pos=0
+        self.__error_HW=0
+        self.__error_byte0_nibble1=0
+        self.__error_byte0_nibble0=0
+        self.__error_byte1_nibble1=0
+        self.__warning_byte2_gps=0
+
+
+def decode_CAN_data():
+    """Receive all CAN Data from ROS Channel received_messages, decode it using the DBC File defined
+    in the Launch file and stream it to topic adma_CAN_data"""
+    
+    gps_data = GPSClass()
+    imu_data = ImuClass()
+    
+    pub_gps = rospy.Publisher('imu/gps_data', NavSatFix, queue_size=10)
+    pub_imu = rospy.Publisher('imu/imu_data', Imu, queue_size=10)
+    
+    # get parameters from launch file
+    path_to_adma_dbc_file = rospy.get_param('/adma_can_connect/path_to_adma_dbc_file')
+    path_to_sensor_dbc_file = rospy.get_param('/adma_can_connect/path_to_sensor_dbc_file')
+
+    dbc_adma_file = open(path_to_adma_dbc_file, "r", encoding="iso-8859-1")
+    db_adma = cantools.database.load(dbc_adma_file)
+    
+    dbc_sensor_file = open(path_to_sensor_dbc_file, "r", encoding="iso-8859-1")
+    db_sensor = cantools.database.load(dbc_sensor_file)
+    
+    base_id_adma = int(rospy.get_param('/adma_can_connect/base_id_adma'))
+    
+    def convert_msgs(can_id, header, decoded_msgs):
+        msgs = pd.DataFrame.from_dict([decoded_msgs])
+        
+        secs = header.stamp.secs
+        nsecs = header.stamp.nsecs
+        
+        can_identifier = str(can_id)
+        
+        def __status_bits():
+            print("Status Bits identifier: "+can_identifier)
+            '''
+            'Stat_Byte0_GPS_Mode'
+            'Stat_Byte0_Standstill'
+            'Stat_Byte0_Skidding'
+            'Stat_Byte0_External_Vel_Out'
+            'Stat_Byte1_Trig_GPS'
+            'Stat_Byte1_Signal_IN3'
+            'Stat_Byte1_Signal_IN2'
+            'Stat_Byte1_Signal_IN1'
+            'Stat_Byte1_Alignment'
+            'Stat_Byte1_AHRS_INS'
+            'Stat_Byte1_Deadreckoning'
+            'Stat_Byte1_SyncLock'
+            'Stat_Byte2_EVK_activ'
+            'Stat_Byte2_EVK_Estimates'
+            'Stat_Byte2_Tilt'
+            'Stat_Byte2_Pos'
+            '''
+        def __error_bits():
+            print("Error and Warning Bits identifier: "+can_identifier)
+            '''
+            'Errors_Byte0_HW'
+            'Errors_Byte0_Nibble1'
+            'Errors_Byte1_Nibble0'
+            'Errors_Byte1_Nibble1'
+            'Warn_Byte2_GPS'
+            '''
+            
+        def __rates_body():
+            x = msgs.loc[0, "RXB"]
+            y = msgs.loc[0, "RYB"]
+            z = msgs.loc[0, "RZB"]
+            imu_data.set_angular_velocity(x,y,z)
+                        
+        def __acc_body():
+            x = msgs.loc[0, "AXB"]
+            y = msgs.loc[0, "AYB"]
+            z = msgs.loc[0, "AZB"]
+            imu_data.set_linear_acceleration(x,y,z)
+        
+        def __euler_to_quaternions():
+            #print(can_identifier+" Euler data = ")
+            roll = msgs.loc[0, "Angle_Roll"]
+            pitch = msgs.loc[0, "Angle_Pitch"]
+            yaw = msgs.loc[0, "Angle_Yaw"]
+
+            ## tf not available with python3 and ros melodic so using transforms3d library
+            quat_tf = transforms3d.taitbryan.euler2quat(yaw, pitch, roll)
+            imu_data.set_quaternions(quat_tf[0], quat_tf[1], quat_tf[2], quat_tf[3])
+
+        def __altitude():
+            #global gps_data
+            altitude = msgs.loc[0, "In_Height"]
+            gps_data.set_altitude(altitude)
+
+        def __ins_time_utc():
+            '''Realtime not used right now, timestamp ROS is already added in GPS_absolut. TBD'''
+            millisec = msgs.loc[0, "INS_Time_Millisec"]
+            time.secs = (millisec/1000) % 60
+            time.nsecs = 0                                     # TBD
+
+        def __gps_absolut():
+            lat = msgs.loc[0, "In_Lat"]
+            longi = msgs.loc[0, "In_Long"]
+            
+            gps_data.set_lat_long(latitude=lat, longitude=longi) 
+            gps_data.set_time(secs=secs, nsecs=nsecs)
+        
+        def __analogin():
+            print(can_identifier+" Analog Input data = ", msgs)
+            print(msgs.loc[:, "AN1"])
+
+        def __default():
+            ''' If user enters invalid option then this method will be called '''
+            print("Unkonwn ID "+can_identifier)
+            #print(msgs)
+            columns_names=msgs.columns.values
+            length = len(columns_names)-1
+            values=[None]*length
+            
+            if msgs.loc[0, str(columns_names[0])] is not None:
+                for counter in range(length):    
+                    values[counter] = msgs.loc[0, str(columns_names[counter])]
+                    print("Value of "+ str(columns_names[counter])+ " is "+str(values[counter]))
+
+        def __get_id(can_id):
+            switcher = {
+                base_id_adma+1: __status_bits,
+                base_id_adma+2: __error_bits,
+                base_id_adma+6: __rates_body,
+                base_id_adma+8: __acc_body,
+                base_id_adma+49: __euler_to_quaternions,
+                base_id_adma+51: __altitude,
+                base_id_adma+56: __ins_time_utc,
+                base_id_adma+57: __gps_absolut,
+                base_id_adma+84: __analogin
+            }
+            func = switcher.get(can_id, __default)
+            return func()
+
+        __get_id(can_id)
+
+    def callback(Frame):
+        
+        if Frame.id < base_id_adma or Frame.id > base_id_adma+84:
+            #output = db_sensors.decode_message(Frame.id, Frame.data)
+            print("Please insert ID in DBC Sensor file")
+        else:
+            output = db_adma.decode_message(Frame.id, Frame.data)
+
+        if output is not None:
+            convert_msgs(can_id=Frame.id, header=Frame.header, decoded_msgs=output)
+
+        # publish saved data from gps and imu objects to topics
+        pub_gps.publish(gps_data.publish_gps_data())
+        pub_imu.publish(imu_data.publish_imu_data())
+
+    rospy.init_node('adma_CAN_msg_translator', anonymous=True)
+    rospy.Subscriber("received_messages", Frame, callback, queue_size=10)
+    rospy.spin()
+
+if __name__ == '__main__':
+    try:
+        decode_CAN_data()
+
+    except rospy.ROSInterruptException:
+        pass
