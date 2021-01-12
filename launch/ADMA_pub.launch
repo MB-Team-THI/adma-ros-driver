@@ -1,0 +1,4 @@
+<launch> 
+   <!-- start node -->
+	<node name="adma_connect" type="adma_connect" pkg="adma_connect" output="screen" args="port_no:=1211"/>
+</launch>
