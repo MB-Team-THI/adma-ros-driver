@@ -1,7 +1,7 @@
 /**
   * @file adma_connect.cpp
   * @brief This file contains required definitions and functions for
-  * receviing information from ADMA sensor
+  * receviing information from ADMA sensor with data format version 3.2
   * @authors Lakshman Balasubramanian
   * @date 06/08/2020
   * */
@@ -18,7 +18,7 @@
 /** \namespace BOOST UDP link*/
 using boost::asio::ip::udp;
 /** \brief IP address to which ADMA broadcasts */
-const boost::asio::ip::address address = boost::asio::ip::address::from_string("192.168.88.255");
+const boost::asio::ip::address address = boost::asio::ip::address::from_string("0.0.0.0");
 
 /** \brief Length of the stream */
 size_t len = 0;
@@ -39,11 +39,11 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
   /* Port number to which ADMA broadcasts */
   /** \get port number list from launch file */
-  std::string portNum = "1040";
-  // if(!nh.getParam("port_no", portNum))
-  // {
-  //   ROS_INFO("No parameters");
-  // }
+  std::string portNum;
+  if(!nh.getParam("port_no", portNum))
+  {
+     ROS_INFO("No parameters");
+  }
   const unsigned short port = static_cast<unsigned short>(std::strtoul(portNum.c_str(), NULL, 0));
   /* Initiliaze publisher */
   ros::Publisher  publisher_  = nh.advertise<adma_connect::Adma>("adma_data",1);
@@ -62,8 +62,8 @@ int main(int argc, char **argv)
     udp::socket socket(io_service);
     socket.open(udp::v4());
     socket.bind(local_endpoint);
-    /* The length of the stream from ADMA is 852 bytes */
-    boost::array<char, 852> recv_buf;
+    /* The length of the stream from ADMA is 856 bytes */
+    boost::array<char, 856> recv_buf;
     udp::endpoint sender_endpoint;
     len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);    
     /* Prepare for parsing */
