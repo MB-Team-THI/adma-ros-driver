@@ -1,7 +1,7 @@
 /**
   * @file adma_connect.cpp
   * @brief This file contains required definitions and functions for
-  * receviing information from ADMA sensor with data format version 3.2
+  * receviing information from ADMA sensor with data format Version: 3.3.2.0
   * @authors Lakshman Balasubramanian
   * @date 06/08/2020
   * */
