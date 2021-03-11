@@ -1219,9 +1219,9 @@ void getGPSAuxData1(const std::string& local_data, adma_connect::Adma& message)
     memcpy(&message.GPSDiffAge , &GPS_Diff_Age, sizeof(message.GPSDiffAge));
     message.fGPSDiffAge = message.GPSDiffAge * 0.1;  
     char GPS_Stats_Used[] = {local_data[490]};
-    memcpy(&message.GPSStatsUsed , &GPS_Diff_Age, sizeof(message.GPSStatsUsed));
+    memcpy(&message.GPSStatsUsed , &GPS_Stats_Used, sizeof(message.GPSStatsUsed));
     char GPS_Stats_Visible[] = {local_data[491]};
-    memcpy(&message.GPSStatsVisible , &GPS_Diff_Age, sizeof(message.GPSStatsVisible));
+    memcpy(&message.GPSStatsVisible , &GPS_Stats_Visible, sizeof(message.GPSStatsVisible));
 
 }
 /// \file
@@ -1237,6 +1237,7 @@ void getGPSAuxData2(const std::string& local_data, adma_connect::Adma& message)
     memcpy(&message.GPSReceiverLoad , &GPS_Receiver_Load, sizeof(message.GPSReceiverLoad));
     message.fGPSReceiverLoad = message.GPSReceiverLoad * 0.5;  
     char GPS_BaseNr[] = {local_data[498]};
+    memcpy(&message.GPSBaseNr , &GPS_BaseNr, sizeof(message.GPSBaseNr));  
 }
 /// \file
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
