@@ -30,7 +30,7 @@ CAN:
 
 **Accessing the ADMA Messages**
 
- - ROS Messages for ADMA are published in a custom message called adma under the topic "adma_data_can"
+ - ROS Messages for ADMA are published in a custom message called adma under the topic "adma_data"
  
 **Disclaimer**
  
