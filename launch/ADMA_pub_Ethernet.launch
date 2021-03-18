@@ -1,8 +1,6 @@
 <launch> 
    <!-- start node -->
-	<node name="adma_connect" type="adma_connect" pkg="adma_connect" output="screen" args="">
-      <param name="ip_address_ADMA" value="192.168.88.255" />
-         <!--    Format "192.168.88.255"     -->
+      <node name="adma_connect" type="adma_connect" pkg="adma_connect" output="screen" args="">
       <param name="port_num_ADMA" value="1040" />
          <!--    As specified in the ADMA setup, Format '1040'     -->
    </node>
