@@ -39,12 +39,12 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
   /* Port number to which ADMA broadcasts */
   /** \get port number list from launch file */
-  std::string portNum;
+  std::string port_num_ADMA;
   if(!nh.getParam("port_no", port_num_ADMA))
   {
      ROS_INFO("No parameters");
   }
-  const unsigned short port = static_cast<unsigned short>(std::strtoul(portNum.c_str(), NULL, 0));
+  const unsigned short port = static_cast<unsigned short>(std::strtoul(port_num_ADMA.c_str(), NULL, 0));
   /* Initiliaze publisher */
   ros::Publisher  publisher_  = nh.advertise<adma_connect::Adma>("adma_data",1);
 
