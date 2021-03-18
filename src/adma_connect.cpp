@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   /* Port number to which ADMA broadcasts */
   /** \get port number list from launch file */
   std::string portNum;
-  if(!nh.getParam("port_no", portNum))
+  if(!nh.getParam("port_no", port_num_ADMA))
   {
      ROS_INFO("No parameters");
   }
