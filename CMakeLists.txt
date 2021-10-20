@@ -64,7 +64,7 @@ catkin_package(
   roscpp
   std_msgs
   DEPENDS 
-  boost
+  Boost
   message_runtime
   )
 
@@ -94,7 +94,7 @@ add_executable(${PROJECT_NAME}
 
 ## Add dependencies to exported targets, like ROS msgs or srvs
 add_dependencies(${PROJECT_NAME}_core
-  ${catkin_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS} 
 )
 
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
