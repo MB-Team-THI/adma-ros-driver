@@ -17,13 +17,11 @@
 
 /** \namespace BOOST UDP link*/
 using boost::asio::ip::udp;
-/** \brief IP address to which ADMA broadcasts */
-const boost::asio::ip::address address = boost::asio::ip::address::from_string("0.0.0.0");
 
 /** \brief Length of the stream */
 size_t len = 0;
 /** \brief Check the timings */
-bool performance_check = 1;
+bool performance_check = 0;
 /** \brief speed of accessing the data */
 #define loopSpeed 100
 /// \file
@@ -36,15 +34,25 @@ int main(int argc, char **argv)
 {
   /* Initialize node */
   ros::init(argc, argv, "adma_connect_pkg");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
   /* Port number to which ADMA broadcasts */
   /** \get port number list from launch file */
   std::string port_num_ADMA;
-  if(!nh.getParam("port_no", port_num_ADMA))
+  std::string ip_adress_ADMA;
+  if(!nh.getParam("port_num_ADMA", port_num_ADMA))
   {
-     ROS_INFO("No parameters");
+     ROS_INFO("Missing Portnumber (see ADMA_pub_Ethernet.launch file!)");
   }
+  if(!nh.getParam("ip_adress_ADMA", ip_adress_ADMA))
+  {
+     ROS_INFO("Missing IP Adress (see ADMA_pub_Ethernet.launch file!)");
+  }
+
+  /** \brief Port Number to which ADMA broadcasts */
   const unsigned short port = static_cast<unsigned short>(std::strtoul(port_num_ADMA.c_str(), NULL, 0));
+  /** \brief IP address to which ADMA broadcasts */
+  const boost::asio::ip::address address = boost::asio::ip::address::from_string(ip_adress_ADMA);
+
   /* Initiliaze publisher */
   ros::Publisher  publisher_  = nh.advertise<adma_connect::Adma>("adma_data",1);
 

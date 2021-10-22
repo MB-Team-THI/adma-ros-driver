@@ -1,5 +1,5 @@
 
-**ADMA Format Version: 3.3.2.0- GPS Receiver for ROS**
+**ADMA Format Version: 3.3.X - GPS Receiver for ROS**
 
 - Tested with ROS-Melodic and Ubuntu 18
 Ethernet:
@@ -18,9 +18,10 @@ CAN:
 
 **How to use the launch files**
 
- - Set the port number in the ADMA_pub.launch file in the port_no args
+ - Set the port number in the ADMA_pub.launch file in the port_num_ADMA args
  - Use a port number greater than 1030 (to be set up in ADMA Web interface)
- 
+ - Set the IP number in the ADMA_pub.launch file in the ip_adress_ADMA args
+  
  Ethernet:
  - roslaunch ADMA_pub_Ethernet.launch
  

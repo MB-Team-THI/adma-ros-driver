@@ -1,7 +1,12 @@
 <launch> 
-   <!-- start node -->
-      <node name="adma_connect" type="adma_connect" pkg="adma_connect" output="screen" args="">
-      <param name="port_num_ADMA" value="1040" />
+
+   <!-- parameters-->
+      <arg name="port_num_ADMA" default="1040" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
          <!--    As specified in the ADMA setup, Format '1040'     -->
-   </node>
+      <arg name="ip_adress_ADMA" default="192.168.88.100" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
+   <!-- start node -->
+      <node name="adma_connect" type="adma_connect" pkg="adma_connect" output="screen">
+         <param name="~/port_num_ADMA"  type="string" value="$(arg port_num_ADMA)"/>
+         <param name="~/ip_adress_ADMA" type="string" value="$(arg ip_adress_ADMA)"/>
+      </node>
 </launch>
