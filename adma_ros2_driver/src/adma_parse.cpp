@@ -963,7 +963,7 @@ void getmiscellaneuospoi4(const std::string& local_data, adma_msgs::msg::AdmaDat
 {
     //! miscellaneous poi 4
     char inv_path_radius_poi4[] = {local_data[376],local_data[377]};
-    memcpy(&message.invpathradius_4 , &inv_path_radius_poi4, sizeof(message.disttrav));
+    memcpy(&message.invpathradius_4 , &inv_path_radius_poi4, sizeof(message.invpathradius_4));
     message.finvpathradius_4 = message.disttrav * 0.0001;
 
     char side_slip_angle_poi4[] = {local_data[378],local_data[379]};
