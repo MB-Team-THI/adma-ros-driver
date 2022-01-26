@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 /** \namespace BOOST UDP link*/
 using boost::asio::ip::udp;
 /** \brief IP address to which ADMA broadcasts */
-const boost::asio::ip::address address = boost::asio::ip::address::from_string("0.0.0.0");
+const boost::asio::ip::address address = boost::asio::ip::address::from_string("10.0.0.2");
 
 /** \brief Length of the stream */
 size_t len = 0;
@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
   /* Port number to which ADMA broadcasts */
   /** \get port number list from launch file */
-  const unsigned short port = 3333; //TODO: Parameterize
+  const unsigned short port = 1040; //TODO: Parameterize
   /* Initiliaze publisher */
   auto adma_data_publisher = node->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
   auto navsat_fix_publisher = node->create_publisher<sensor_msgs::msg::NavSatFix>("gps/fix", 1);
