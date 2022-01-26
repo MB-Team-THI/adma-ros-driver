@@ -1,0 +1,46 @@
+#Delta_Target_Longitude and Delta_Target_Latitude
+float32 delta_target_longitude
+float32 delta_target_latitude
+
+#Delta_Version
+int32 code_version
+
+#Delta_Longitudinal
+float32 long_delta_distance
+float32 long_delta_velocity
+
+#Delta_Lateral
+float32 lat_delta_distance
+float32 lat_delta_velocity
+
+#Delta_Resultant
+float32 resultant_distance
+float32 resultant_velocity
+
+#Delta_Angle
+float32 angle_of_orientation
+
+#Delta_Time_ForwardVel
+int32 delta_time
+float32 target_forward_velocity
+float32 hunter_forward_velocity
+
+#Delta_ForwardAccel_LatVel
+float32 target_forward_acceleration
+float32 hunter_forward_acceleration
+float32 target_lateral_velocity
+float32 hunter_lateral_velocity
+
+#Delta_LatAccel_PitchAngle
+float32 target_lateral_acceleration
+float32 hunter_lateral_acceleration
+float32 target_pitch_angle
+float32 hunter_pitch_angle
+
+#Delta_GPS_Mode
+int16 target_gps_mode
+int16 hunter_gps_mode
+
+# MobileEye Time Comparison
+int32 timesec
+int32 timensec
