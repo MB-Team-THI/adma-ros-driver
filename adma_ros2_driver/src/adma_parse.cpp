@@ -109,7 +109,7 @@ void getadmastaticheader(const std::string& local_data, adma_msgs::msg::AdmaData
     memcpy(&message.serialno , &serialno, sizeof(message.serialno));
     message.genesysid =  genesysid;
     std::stringstream ss_hv;
-    ss_hv <<  int(local_data[4]) << int(local_data[5]) << int(local_data[6]) << int(local_data[15]);
+    ss_hv <<  int(local_data[4]) << int(local_data[5]) << int(local_data[6]) << int(local_data[7]);
     message.headerversion = ss_hv.str();
     std::stringstream ss_fv;
     ss_fv <<  int(local_data[12]) << int(local_data[13]) << int(local_data[14]) << int(local_data[15]);
@@ -817,7 +817,7 @@ void getexternalvecovitydigpulses(const std::string& local_data, adma_msgs::msg:
     //! external velocity digital pulses
     char ext_vel_dig_x[] = {local_data[304],local_data[305]};
     memcpy(&message.extveldigx , &ext_vel_dig_x, sizeof(message.extveldigx));
-    message.fextveldigx = message.extvelany * 0.005;
+    message.fextveldigx = message.extveldigx * 0.005;
 
     char ext_vel_dig_y[] = {local_data[306],local_data[307]};
     memcpy(&message.extveldigy , &ext_vel_dig_y, sizeof(message.extveldigy));
