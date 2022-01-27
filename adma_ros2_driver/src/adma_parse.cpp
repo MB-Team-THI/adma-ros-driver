@@ -1217,9 +1217,9 @@ void getgpsauxdata1(const std::string& local_data, adma_msgs::msg::AdmaData& mes
     memcpy(&message.gpsdiffage , &gps_diff_age, sizeof(message.gpsdiffage));
     message.fgpsdiffage = message.gpsdiffage * 0.1;  
     char gps_stats_used[] = {local_data[490]};
-    memcpy(&message.gpsstatsused , &gps_diff_age, sizeof(message.gpsstatsused));
+    memcpy(&message.gpsstatsused , &gps_stats_used, sizeof(message.gpsstatsused));
     char gps_stats_visible[] = {local_data[491]};
-    memcpy(&message.gpsstatsvisible , &gps_diff_age, sizeof(message.gpsstatsvisible));
+    memcpy(&message.gpsstatsvisible , &gps_stats_visible, sizeof(message.gpsstatsvisible));
 
 }
 /// \file
