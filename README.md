@@ -1,5 +1,5 @@
 
-**ADMA Format Version: 3.3.X - GPS Receiver for ROS**
+**ADMA Format Version: 3.3.2 - GPS Receiver for ROS**
 
 - Tested with ROS-Melodic and Ubuntu 18
 Ethernet:
