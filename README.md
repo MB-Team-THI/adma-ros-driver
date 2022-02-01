@@ -7,7 +7,7 @@ Ethernet:
 CAN:
 - Uses python-can and cantools library for receiving and decoding CAN bus messages. Tested on NVIDA Jetson AGX Xavier
 
-**How to buld the package?**
+**How to build the package?**
 
 - Open a terminal in a folder of choice
 - mkdir catkin_ws && cd catkin_ws && mkdir src && cd src
