@@ -190,7 +190,7 @@ void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& messa
 void getstatustrigger(const std::string& local_data, adma_msgs::msg::AdmaData& message)
 {
     unsigned char statustriggergps;
-    char statustrigger[] = {local_data[96]};
+    char statustrigger[] = {local_data[97]};
     memcpy(&statustriggergps, &statustrigger, sizeof(statustriggergps));
     bool status_synclock = getbit(statustriggergps,7);
     bool status_dead_reckoning = getbit(statustriggergps,6);
@@ -225,7 +225,7 @@ void getstatustrigger(const std::string& local_data, adma_msgs::msg::AdmaData& m
 void getevkstatus(const std::string& local_data, adma_msgs::msg::AdmaData& message)
 {
     unsigned char statusevk;
-    char statusevkdata[] = {local_data[96]};
+    char statusevkdata[] = {local_data[98]};
     memcpy(&statusevk, &statusevkdata, sizeof(statusevk));
     bool status_pos_b2 = getbit(statusevk,7);
     bool status_pos_b1 = getbit(statusevk,6);
@@ -243,7 +243,7 @@ void getevkstatus(const std::string& local_data, adma_msgs::msg::AdmaData& messa
     message.statusheadingexecuted = status_heading_executed;
     /* status status_configuration_changed */
     message.statusconfigurationchanged = status_configuration_changed;
-    /* status pos */
+    /* status tilt */
     if(status_tilt_b1==0 && status_tilt_b2==0)
     {
         message.statustilt = 0;
@@ -256,7 +256,7 @@ void getevkstatus(const std::string& local_data, adma_msgs::msg::AdmaData& messa
     {
         message.statustilt = 2;
     }
-        /* status tilt */
+    /* status pos */
     if(status_pos_b1==0 && status_pos_b2==0)
     {
         message.statuspos = 0;
@@ -1234,7 +1234,8 @@ void getgpsauxdata2(const std::string& local_data, adma_msgs::msg::AdmaData& mes
     char gps_receiver_load[] = {local_data[497]};
     memcpy(&message.gpsreceiverload , &gps_receiver_load, sizeof(message.gpsreceiverload));
     message.fgpsreceiverload = message.gpsreceiverload * 0.5;  
-    char gps_basenr[] = {local_data[498]};
+    char gps_basenr[] = {local_data[498],local_data[499],local_data[500],local_data[501]};
+    memcpy(&message.gpsbasenr , &gps_basenr, sizeof(message.gpsbasenr));  
 }
 /// \file
 /// \brief  getgpsabs function - adma expected velocity error
@@ -1616,11 +1617,11 @@ void getinsvelframexyz(const std::string& local_data, adma_msgs::msg::AdmaData& 
     memcpy(&message.insvelframex , &ins_vel_frame_x, sizeof(message.insvelframex));
     message.finsvelframex = message.insvelframex * 0.005;
     char ins_vel_frame_y[] = {local_data[746],local_data[747]};
-    memcpy(&message.insvelframex , &ins_vel_frame_y, sizeof(message.insvelframex));
-    message.finsvelframex = message.insvelframex * 0.005;
+    memcpy(&message.insvelframey , &ins_vel_frame_y, sizeof(message.insvelframey));
+    message.finsvelframey = message.insvelframey * 0.005;
     char ins_vel_frame_z[] = {local_data[748],local_data[749]};
-    memcpy(&message.insvelframex , &ins_vel_frame_z, sizeof(message.insvelframex));
-    message.finsvelframex = message.insvelframex * 0.005;
+    memcpy(&message.insvelframez , &ins_vel_frame_z, sizeof(message.insvelframez));
+    message.finsvelframez = message.insvelframez * 0.005;
 }
 
 /// \file
