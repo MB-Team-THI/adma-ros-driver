@@ -37,33 +37,35 @@ int main(int argc, char **argv)
   auto heading_publisher = node->create_publisher<std_msgs::msg::Float64>("gps/heading", 1);
   auto velocity_publisher = node->create_publisher<std_msgs::msg::Float64>("gps/velocity", 1);
 
-  /* Initilaize loop rate */
-  rclcpp::WallRate loop_rate(5ms);
   /* Create an IO Service wit the OS given the IP and the port */
   boost::asio::io_service io_service;
   /* Establish UDP connection*/
   udp::endpoint local_endpoint = boost::asio::ip::udp::endpoint(address, port);
   std::cout << "Local bind " << local_endpoint << std::endl;
+
+  /* Socket handling */
+  udp::socket socket(io_service);
+  socket.open(udp::v4());
+  socket.bind(local_endpoint);
+  udp::endpoint sender_endpoint;
+
   /* Endless loop while ROS is ok*/
   while (rclcpp::ok())
   {
-    /* Socket handling */
-    udp::socket socket(io_service);
-    socket.open(udp::v4());
-    socket.bind(local_endpoint);
-    /* The length of the stream from ADMA is 852 bytes */
-    boost::array<char, 852> recv_buf;
-    udp::endpoint sender_endpoint;
+    /* The length of the stream from ADMA is 856 bytes */
+    boost::array<char, 856> recv_buf;
     len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
     /* Prepare for parsing */
     std::string local_data(recv_buf.begin(), recv_buf.end());
-    /* Load the messages on the publisers */
+    /* Load the messages on the publishers */
     adma_msgs::msg::AdmaData message;
     sensor_msgs::msg::NavSatFix message_fix;
     message_fix.header.stamp = node->now();
     message_fix.header.frame_id = "adma";
     std_msgs::msg::Float64 message_heading;
     std_msgs::msg::Float64 message_velocity;
+    message.timemsec = node->get_clock()->now().seconds() * 1000;
+    message.timensec = node->get_clock()->now().nanoseconds();
     getparseddata(local_data, message, message_fix, message_heading, message_velocity);
     /* publish the ADMA message */
 
@@ -80,11 +82,8 @@ int main(int argc, char **argv)
       float weektime = message.instimeweek;
       RCLCPP_INFO(node->get_logger(), "%f ", ((grab_time * 1000) - (message.instimemsec + 1592697600000)));
     }
-    message.timemsec = node->get_clock()->now().seconds() * 1000;
-    message.timensec = node->get_clock()->now().nanoseconds();
-    /* Loop rate maintain*/
+    
     rclcpp::spin_some(node);
-    loop_rate.sleep();
   }
   rclcpp::shutdown();
   return 0;
