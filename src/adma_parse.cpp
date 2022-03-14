@@ -194,7 +194,7 @@ void getStatusGPS(const std::string& local_data, adma_connect::Adma& message)
 void getStatusTrigger(const std::string& local_data, adma_connect::Adma& message)
 {
     unsigned char statusTriggerGps;
-    char StatusTrigger[] = {local_data[96]};
+    char StatusTrigger[] = {local_data[97]};
     memcpy(&statusTriggerGps, &StatusTrigger, sizeof(statusTriggerGps));
     bool status_synclock = getBit(statusTriggerGps,7);
     bool status_dead_reckoning = getBit(statusTriggerGps,6);
@@ -229,7 +229,7 @@ void getStatusTrigger(const std::string& local_data, adma_connect::Adma& message
 void getEVKStatus(const std::string& local_data, adma_connect::Adma& message)
 {
     unsigned char statusEVK;
-    char StatusEVK[] = {local_data[96]};
+    char StatusEVK[] = {local_data[98]};
     memcpy(&statusEVK, &StatusEVK, sizeof(statusEVK));
     bool status_pos_b2 = getBit(statusEVK,7);
     bool status_pos_b1 = getBit(statusEVK,6);
