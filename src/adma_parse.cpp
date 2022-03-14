@@ -113,7 +113,7 @@ void getADMAStaticHeader(const std::string& local_data, adma_connect::Adma& mess
     memcpy(&message.SerialNo , &SerialNo, sizeof(message.SerialNo));
     message.GeneSysID =  GeneSysID;
     std::stringstream ss_HV;
-    ss_HV <<  int(local_data[4]) << int(local_data[5]) << int(local_data[6]) << int(local_data[15]);
+    ss_HV <<  int(local_data[4]) << int(local_data[5]) << int(local_data[6]) << int(local_data[7]);
     message.HeaderVersion = ss_HV.str();
     std::stringstream ss_FV;
     ss_FV <<  int(local_data[12]) << int(local_data[13]) << int(local_data[14]) << int(local_data[15]);
@@ -141,7 +141,7 @@ void getADMADynamicHeader(const std::string& local_data, adma_connect::Adma& mes
     char SliceSize[] = {local_data[88],local_data[89],local_data[90],local_data[91]};
     memcpy(&message.SliceSize , &SliceSize, sizeof(message.SliceSize));
     char SliceData[] = {local_data[92],local_data[93],local_data[94],local_data[95]};
-
+    memcpy(&message.SliceData , &SliceData, sizeof(message.SliceData));
 }
 
 /// \file
@@ -172,11 +172,11 @@ void getStatusGPS(const std::string& local_data, adma_connect::Adma& message)
     }
     else if (rtk_coarse) 
     {
-        message.StatusGPSMode = 3;
+        message.StatusGPSMode = 4;
     }
     else if (rtk_precise) 
     {
-        message.StatusGPSMode = 4;
+        message.StatusGPSMode = 8;
     }
     /* Status Stand Still */
     message.StatusStandStill = standstill_c;
@@ -821,7 +821,7 @@ void getExternalVecovityDigPulses(const std::string& local_data, adma_connect::A
     //! External Velocity Digital Pulses
     char Ext_Vel_Dig_X[] = {local_data[304],local_data[305]};
     memcpy(&message.ExtVelDigX , &Ext_Vel_Dig_X, sizeof(message.ExtVelDigX));
-    message.fExtVelDigX = message.ExtVelAnY * 0.005;
+    message.fExtVelDigX = message.ExtVelDigX * 0.005;
 
     char Ext_Vel_Dig_Y[] = {local_data[306],local_data[307]};
     memcpy(&message.ExtVelDigY , &Ext_Vel_Dig_Y, sizeof(message.ExtVelDigY));
@@ -967,8 +967,8 @@ void getMiscellaneuosPOI4(const std::string& local_data, adma_connect::Adma& mes
 {
     //! Miscellaneous POI 4
     char Inv_Path_Radius_POI4[] = {local_data[376],local_data[377]};
-    memcpy(&message.InvPathRadius_4 , &Inv_Path_Radius_POI4, sizeof(message.DistTrav));
-    message.fInvPathRadius_4 = message.DistTrav * 0.0001;
+    memcpy(&message.InvPathRadius_4 , &Inv_Path_Radius_POI4, sizeof(message.InvPathRadius_4));
+    message.fInvPathRadius_4 = message.InvPathRadius_4 * 0.0001;
 
     char Side_Slip_Angle_POI4[] = {local_data[378],local_data[379]};
     memcpy(&message.SideSlipAngle_4 , &Side_Slip_Angle_POI4, sizeof(message.SideSlipAngle_4));
@@ -1616,11 +1616,11 @@ void getINSVelFrameXYZ(const std::string& local_data, adma_connect::Adma& messag
     memcpy(&message.INSVelFrameX , &INS_Vel_Frame_X, sizeof(message.INSVelFrameX));
     message.fINSVelFrameX = message.INSVelFrameX * 0.005;
     char INS_Vel_Frame_Y[] = {local_data[746],local_data[747]};
-    memcpy(&message.INSVelFrameX , &INS_Vel_Frame_Y, sizeof(message.INSVelFrameX));
-    message.fINSVelFrameX = message.INSVelFrameX * 0.005;
+    memcpy(&message.INSVelFrameY , &INS_Vel_Frame_Y, sizeof(message.INSVelFrameY));
+    message.fINSVelFrameY = message.INSVelFrameY * 0.005;
     char INS_Vel_Frame_Z[] = {local_data[748],local_data[749]};
-    memcpy(&message.INSVelFrameX , &INS_Vel_Frame_Z, sizeof(message.INSVelFrameX));
-    message.fINSVelFrameX = message.INSVelFrameX * 0.005;
+    memcpy(&message.INSVelFrameZ , &INS_Vel_Frame_Z, sizeof(message.INSVelFrameZ));
+    message.fINSVelFrameZ = message.INSVelFrameZ * 0.005;
 }
 
 /// \file
