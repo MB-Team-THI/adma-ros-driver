@@ -1,5 +1,4 @@
-
-**ADMA Format Version: 3.3.2 - GPS Receiver for ROS**
+# ADMA Format Version: 3.3.3 - GPS Receiver for ROS
 
 - Tested with ROS-Melodic and Ubuntu 18
 Ethernet:
@@ -33,6 +32,16 @@ CAN:
 
  - ROS Messages for ADMA are published in a custom message called adma under the topic "adma_data"
  
-**Disclaimer**
+**Credits**
+ - The original project can be found here:
+ https://github.com/lab176344/adma_ros_driver
  
- - The drivers are written for the use of the working group, hence the data used by my working group is only verified, all the parsing is not verfied and the package is done in a prototype fashion. Feel free to correct it if there are any issues
+ - This project exists, thanks to these people:
+ 
+   - https://github.com/lab176344
+ 
+   - https://github.com/BlackForestFormula
+ 
+   - https://github.com/Betschler
+ 
+ 
