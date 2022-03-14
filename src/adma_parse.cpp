@@ -1272,7 +1272,7 @@ void getGPSHeight(const std::string& local_data, adma_connect::Adma& message)
     //! GPS Height (MSL)
     char GPS_Height[] = {local_data[512],local_data[513],local_data[514],local_data[515]};
     memcpy(&message.GPSHeight , &GPS_Height, sizeof(message.GPSHeight));
-    message.GPSHeight = message.GPSHeight * 0.01;  
+    message.fGPSHeight = message.GPSHeight * 0.01;  
     char Undulation[] = {local_data[516],local_data[517]};
     memcpy(&message.Undulation , &Undulation, sizeof(message.Undulation));
     message.fUndulation = message.Undulation * 0.01;  
