@@ -1222,7 +1222,10 @@ void getGPSAuxData1(const std::string& local_data, adma_connect::Adma& message)
     memcpy(&message.GPSStatsUsed , &GPS_Stats_Used, sizeof(message.GPSStatsUsed));
     char GPS_Stats_Visible[] = {local_data[491]};
     memcpy(&message.GPSStatsVisible , &GPS_Stats_Visible, sizeof(message.GPSStatsVisible));
-
+    char GPS_Stats_Dual_Ant_Visible[] = {local_data[492]};
+    memcpy(&message.GPSSatsDualAntUsed , &GPS_Stats_Dual_Ant_Visible, sizeof(message.GPSSatsDualAntUsed));
+    char GPS_Sats_Dual_Ant_Visible[] = {local_data[493]};
+    memcpy(&message.GPSSatsDualAntVisible , &GPS_Sats_Dual_Ant_Visible, sizeof(message.GPSSatsDualAntVisible));
 }
 /// \file
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
@@ -1315,7 +1318,13 @@ void getGPSDualAntAngleETE(const std::string& local_data, adma_connect::Adma& me
     message.fGPSDualAntStdDevHeading = message.GPSDualAntStdDevHeading * 0.01;  
     char GPS_DualAnt_Stddev_Pitch[] = {local_data[537]};
     memcpy(&message.GPSDualAntStdDevPitch , &GPS_DualAnt_Stddev_Pitch, sizeof(message.GPSDualAntStdDevPitch));
-    message.fGPSDualAntStdDevPitch = message.GPSDualAntStdDevPitch * 0.01;  
+    message.fGPSDualAntStdDevPitch = message.GPSDualAntStdDevPitch * 0.01;
+    char GPS_DualAnt_Stddev_Heading_HR[] =  {local_data[538], local_data[539};
+    memcpy(&message.GPSDualAntStdDevHeading_HR , &GPS_DualAnt_Stddev_Heading_HR, sizeof(message.GPSDualAntStdDevHeading_HR));
+    message.fGPSDualAntStdDevHeading_HR = message.GPSDualAntStdDevHeading_HR * 0.01;  
+    char GPS_DualAnt_Stddev_Pitch_HR[] = {local_data[540], local_data[541};
+    memcpy(&message.GPSDualAntStdDevPitch_HR , &GPS_DualAnt_Stddev_Pitch_HR, sizeof(message.GPSDualAntStdDevPitch_HR));
+    message.fGPSDualAntStdDevPitch_HR = message.GPSDualAntStdDevPitch_HR * 0.01;
 }
 
 

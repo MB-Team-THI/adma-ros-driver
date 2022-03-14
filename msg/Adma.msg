@@ -483,6 +483,8 @@ uint16 GPSDiffAge
 float32 fGPSDiffAge
 int8 GPSStatsUsed
 int8 GPSStatsVisible
+int8 GPSSatsDualAntUsed
+int8 GPSSatsDualAntVisible
 
 # GPS AuxData 2
 # GPSLogDelay in Ta
@@ -529,6 +531,10 @@ int8 GPSDualAntStdDevHeading
 int8 GPSDualAntStdDevPitch
 float32 fGPSDualAntStdDevHeading
 float32 fGPSDualAntStdDevPitch
+int8 GPSDualAntStdDevHeading_HR
+int8 GPSDualAntStdDevPitch_HR
+float32 fGPSDualAntStdDevHeading_HR
+float32 fGPSDualAntStdDevPitch_HR
 
 # INS Position Height (MSL)
 int32 INSHeight
