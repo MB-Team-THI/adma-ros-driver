@@ -13,7 +13,7 @@ uint32 ConfigVersion
 uint32 ConfigSize
 uint32 ByteOffset
 uint32 SliceSize
-#byte SliceData
+uint32 SliceData
 
 # Status
 int32 StatusGPSMode
