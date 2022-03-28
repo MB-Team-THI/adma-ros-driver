@@ -69,6 +69,21 @@ The ADMA ROS-Driver has to be configured to receive data from the ADMA. This mea
 **Accessing the ADMA Messages**
 
  - The ROS Messages from the ADMA are published in a custom message called adma under the topic "adma_data"
+ There are two manners to test the data reception: a) by means of rostopic echo, and b) via rqt
+ 
+ a) By means of rostopic echo:
+ - Enter the installation folder
+ - Open a terminal and enter: source devel/setup.bash
+ - Enter: rostopic echo /adma_connect/adma_data
+ - If the information is being received, it should appear on the terminal
+ 
+ b) Via rqt
+ - Enter the installation folder
+ - Open a terminal and enter: source devel/setup.bash
+ - Enter: rqt_topic
+ - The list of topic will be displayed
+ - Select the "/adma_connect/adma_data" topic.
+ - If the information is being received, it should appear. 
  
 **Credits**
  - The original project can be found here:
