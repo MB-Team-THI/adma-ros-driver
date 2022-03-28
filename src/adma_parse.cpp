@@ -113,7 +113,7 @@ void getADMAStaticHeader(const std::string& local_data, adma_connect::Adma& mess
     memcpy(&message.SerialNo , &SerialNo, sizeof(message.SerialNo));
     message.GeneSysID =  GeneSysID;
     std::stringstream ss_HV;
-    ss_HV <<  int(local_data[4]) << int(local_data[5]) << int(local_data[6]) << int(local_data[15]);
+    ss_HV <<  int(local_data[4]) << int(local_data[5]) << int(local_data[6]) << int(local_data[7]);
     message.HeaderVersion = ss_HV.str();
     std::stringstream ss_FV;
     ss_FV <<  int(local_data[12]) << int(local_data[13]) << int(local_data[14]) << int(local_data[15]);
@@ -141,7 +141,7 @@ void getADMADynamicHeader(const std::string& local_data, adma_connect::Adma& mes
     char SliceSize[] = {local_data[88],local_data[89],local_data[90],local_data[91]};
     memcpy(&message.SliceSize , &SliceSize, sizeof(message.SliceSize));
     char SliceData[] = {local_data[92],local_data[93],local_data[94],local_data[95]};
-
+    memcpy(&message.SliceData , &SliceData, sizeof(message.SliceData));
 }
 
 /// \file
@@ -172,11 +172,11 @@ void getStatusGPS(const std::string& local_data, adma_connect::Adma& message)
     }
     else if (rtk_coarse) 
     {
-        message.StatusGPSMode = 3;
+        message.StatusGPSMode = 4;
     }
     else if (rtk_precise) 
     {
-        message.StatusGPSMode = 4;
+        message.StatusGPSMode = 8;
     }
     /* Status Stand Still */
     message.StatusStandStill = standstill_c;
@@ -194,7 +194,7 @@ void getStatusGPS(const std::string& local_data, adma_connect::Adma& message)
 void getStatusTrigger(const std::string& local_data, adma_connect::Adma& message)
 {
     unsigned char statusTriggerGps;
-    char StatusTrigger[] = {local_data[96]};
+    char StatusTrigger[] = {local_data[97]};
     memcpy(&statusTriggerGps, &StatusTrigger, sizeof(statusTriggerGps));
     bool status_synclock = getBit(statusTriggerGps,7);
     bool status_dead_reckoning = getBit(statusTriggerGps,6);
@@ -229,7 +229,7 @@ void getStatusTrigger(const std::string& local_data, adma_connect::Adma& message
 void getEVKStatus(const std::string& local_data, adma_connect::Adma& message)
 {
     unsigned char statusEVK;
-    char StatusEVK[] = {local_data[96]};
+    char StatusEVK[] = {local_data[98]};
     memcpy(&statusEVK, &StatusEVK, sizeof(statusEVK));
     bool status_pos_b2 = getBit(statusEVK,7);
     bool status_pos_b1 = getBit(statusEVK,6);
@@ -821,7 +821,7 @@ void getExternalVecovityDigPulses(const std::string& local_data, adma_connect::A
     //! External Velocity Digital Pulses
     char Ext_Vel_Dig_X[] = {local_data[304],local_data[305]};
     memcpy(&message.ExtVelDigX , &Ext_Vel_Dig_X, sizeof(message.ExtVelDigX));
-    message.fExtVelDigX = message.ExtVelAnY * 0.005;
+    message.fExtVelDigX = message.ExtVelDigX * 0.005;
 
     char Ext_Vel_Dig_Y[] = {local_data[306],local_data[307]};
     memcpy(&message.ExtVelDigY , &Ext_Vel_Dig_Y, sizeof(message.ExtVelDigY));
@@ -967,8 +967,8 @@ void getMiscellaneuosPOI4(const std::string& local_data, adma_connect::Adma& mes
 {
     //! Miscellaneous POI 4
     char Inv_Path_Radius_POI4[] = {local_data[376],local_data[377]};
-    memcpy(&message.InvPathRadius_4 , &Inv_Path_Radius_POI4, sizeof(message.DistTrav));
-    message.fInvPathRadius_4 = message.DistTrav * 0.0001;
+    memcpy(&message.InvPathRadius_4 , &Inv_Path_Radius_POI4, sizeof(message.InvPathRadius_4));
+    message.fInvPathRadius_4 = message.InvPathRadius_4 * 0.0001;
 
     char Side_Slip_Angle_POI4[] = {local_data[378],local_data[379]};
     memcpy(&message.SideSlipAngle_4 , &Side_Slip_Angle_POI4, sizeof(message.SideSlipAngle_4));
@@ -1222,7 +1222,10 @@ void getGPSAuxData1(const std::string& local_data, adma_connect::Adma& message)
     memcpy(&message.GPSStatsUsed , &GPS_Stats_Used, sizeof(message.GPSStatsUsed));
     char GPS_Stats_Visible[] = {local_data[491]};
     memcpy(&message.GPSStatsVisible , &GPS_Stats_Visible, sizeof(message.GPSStatsVisible));
-
+    char GPS_Stats_Dual_Ant_Visible[] = {local_data[492]};
+    memcpy(&message.GPSSatsDualAntUsed , &GPS_Stats_Dual_Ant_Visible, sizeof(message.GPSSatsDualAntUsed));
+    char GPS_Sats_Dual_Ant_Visible[] = {local_data[493]};
+    memcpy(&message.GPSSatsDualAntVisible , &GPS_Sats_Dual_Ant_Visible, sizeof(message.GPSSatsDualAntVisible));
 }
 /// \file
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
@@ -1269,7 +1272,7 @@ void getGPSHeight(const std::string& local_data, adma_connect::Adma& message)
     //! GPS Height (MSL)
     char GPS_Height[] = {local_data[512],local_data[513],local_data[514],local_data[515]};
     memcpy(&message.GPSHeight , &GPS_Height, sizeof(message.GPSHeight));
-    message.GPSHeight = message.GPSHeight * 0.01;  
+    message.fGPSHeight = message.GPSHeight * 0.01;  
     char Undulation[] = {local_data[516],local_data[517]};
     memcpy(&message.Undulation , &Undulation, sizeof(message.Undulation));
     message.fUndulation = message.Undulation * 0.01;  
@@ -1315,7 +1318,13 @@ void getGPSDualAntAngleETE(const std::string& local_data, adma_connect::Adma& me
     message.fGPSDualAntStdDevHeading = message.GPSDualAntStdDevHeading * 0.01;  
     char GPS_DualAnt_Stddev_Pitch[] = {local_data[537]};
     memcpy(&message.GPSDualAntStdDevPitch , &GPS_DualAnt_Stddev_Pitch, sizeof(message.GPSDualAntStdDevPitch));
-    message.fGPSDualAntStdDevPitch = message.GPSDualAntStdDevPitch * 0.01;  
+    message.fGPSDualAntStdDevPitch = message.GPSDualAntStdDevPitch * 0.01;
+    char GPS_DualAnt_Stddev_Heading_HR[] =  {local_data[538], local_data[539};
+    memcpy(&message.GPSDualAntStdDevHeading_HR , &GPS_DualAnt_Stddev_Heading_HR, sizeof(message.GPSDualAntStdDevHeading_HR));
+    message.fGPSDualAntStdDevHeading_HR = message.GPSDualAntStdDevHeading_HR * 0.01;  
+    char GPS_DualAnt_Stddev_Pitch_HR[] = {local_data[540], local_data[541};
+    memcpy(&message.GPSDualAntStdDevPitch_HR , &GPS_DualAnt_Stddev_Pitch_HR, sizeof(message.GPSDualAntStdDevPitch_HR));
+    message.fGPSDualAntStdDevPitch_HR = message.GPSDualAntStdDevPitch_HR * 0.01;
 }
 
 
@@ -1616,11 +1625,11 @@ void getINSVelFrameXYZ(const std::string& local_data, adma_connect::Adma& messag
     memcpy(&message.INSVelFrameX , &INS_Vel_Frame_X, sizeof(message.INSVelFrameX));
     message.fINSVelFrameX = message.INSVelFrameX * 0.005;
     char INS_Vel_Frame_Y[] = {local_data[746],local_data[747]};
-    memcpy(&message.INSVelFrameX , &INS_Vel_Frame_Y, sizeof(message.INSVelFrameX));
-    message.fINSVelFrameX = message.INSVelFrameX * 0.005;
+    memcpy(&message.INSVelFrameY , &INS_Vel_Frame_Y, sizeof(message.INSVelFrameY));
+    message.fINSVelFrameY = message.INSVelFrameY * 0.005;
     char INS_Vel_Frame_Z[] = {local_data[748],local_data[749]};
-    memcpy(&message.INSVelFrameX , &INS_Vel_Frame_Z, sizeof(message.INSVelFrameX));
-    message.fINSVelFrameX = message.INSVelFrameX * 0.005;
+    memcpy(&message.INSVelFrameZ , &INS_Vel_Frame_Z, sizeof(message.INSVelFrameZ));
+    message.fINSVelFrameZ = message.INSVelFrameZ * 0.005;
 }
 
 /// \file
