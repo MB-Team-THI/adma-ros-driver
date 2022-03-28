@@ -1319,7 +1319,7 @@ void getGPSDualAntAngleETE(const std::string& local_data, adma_connect::Adma& me
     char GPS_DualAnt_Stddev_Pitch[] = {local_data[537]};
     memcpy(&message.GPSDualAntStdDevPitch , &GPS_DualAnt_Stddev_Pitch, sizeof(message.GPSDualAntStdDevPitch));
     message.fGPSDualAntStdDevPitch = message.GPSDualAntStdDevPitch * 0.01;
-    char GPS_DualAnt_Stddev_Heading_HR[] =  {local_data[538], local_data[539};
+    char GPS_DualAnt_Stddev_Heading_HR[] =  {local_data[538], local_data[539]};
     memcpy(&message.GPSDualAntStdDevHeading_HR , &GPS_DualAnt_Stddev_Heading_HR, sizeof(message.GPSDualAntStdDevHeading_HR));
     message.fGPSDualAntStdDevHeading_HR = message.GPSDualAntStdDevHeading_HR * 0.01;  
     char GPS_DualAnt_Stddev_Pitch_HR[] = {local_data[540], local_data[541]};
