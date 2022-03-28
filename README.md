@@ -9,11 +9,14 @@ CAN:
 **How to build the package?**
 
 - Open a terminal in a folder of choice
-- mkdir catkin_ws && cd catkin_ws && mkdir src && cd src
-- git clone https://github.com/lab176344/adma_ros_driver.git
-- cd .. 
-- catkin_make
-- source devel/setup.bash
+- enter: mkdir catkin_ws <- creates the directory "catkin_ws"
+- enter: cd catkin_ws <- enters the directory "catkin_ws"
+- enter: mkdir src <- creates the directory "src"
+- enter: cd src <- enters the directory "src"
+- enter: git clone https://github.com/lab176344/adma_ros_driver.git <- clones the source code to the local drive
+- enter: cd ..  <- goes a foler upwards
+- enter: catkin_make
+- enter: source devel/setup.bash
 
 **How to use the launch files**
 
