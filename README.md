@@ -14,7 +14,7 @@ CAN:
 - enter: mkdir src <- creates the directory "src"
 - enter: cd src <- enters the directory "src"
 - enter: git clone https://github.com/lab176344/adma_ros_driver.git <- clones the source code to the local drive
-- enter: cd ..  <- goes a foler upwards
+- enter: cd ..  <- goes a folder upwards
 - enter: catkin_make
 - enter: source devel/setup.bash
 
