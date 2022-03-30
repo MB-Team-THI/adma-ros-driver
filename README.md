@@ -101,7 +101,7 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
 
 ### How to use the launch files?
   
- #### When connected via Ethernet:
+ #### a) When connected via Ethernet:
  - Enter the installation folder
  - Open a terminal and enter: 
  ```
@@ -112,7 +112,7 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
  roslaunch adma_connect ADMA_pub_Ethernet.launch
  ```
  
- ####  When connected via CAN:
+ ####  b) When connected via CAN:
  - Enter the installation folder
  - Open a terminal and enter: 
  ```
