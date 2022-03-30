@@ -28,6 +28,7 @@ Note: If you already have a ROS installation, jump to "How to build the ADMA ROS
 **How to build the ADMA ROS-Driver package?**
 
 - Open a terminal in a folder of choice
+- ```mkdir catkin_ws```
 - Enter: mkdir catkin_ws <- creates the directory "catkin_ws"
 - Enter: cd catkin_ws <- enters the directory "catkin_ws"
 - Enter: mkdir src <- creates the directory "src"
