@@ -18,21 +18,25 @@ Note: If you already have a ROS installation, jump to "How to build the ADMA ROS
 
 **How to update the source folder?**
 
-- On the Terminal and enter: 
+- Open the Terminal and enter: 
 ```
 gedit ~/.bashrc
 ```
 This opens the text file to alter the source folder.
 - Once the text file is open, go to the bottom and add the two following lines:
-- source /opt/ros/noetic/setup.bash
-- echo "source /opt/ros/noetic/setup.bash"
-- To check if ROS is installed properly, on the terminal enter: roscore
+```
+source /opt/ros/noetic/setup.bash
+echo "source /opt/ros/noetic/setup.bash"
+```
+- To check if ROS is installed properly, on the terminal enter: 
+```roscore```
 - If ROS is correclty installed, no error messages should appear. 
 
 **How to build the ADMA ROS-Driver package?**
 
-- Open a terminal in a folder of choice
-- Enter: mkdir catkin_ws <- creates the directory "catkin_ws"
+- Open a terminal in a folder of choice. This folder will be the installation folder.
+- Enter the following code lines:
+```mkdir catkin_ws``` <- This creates the directory "catkin_ws"
 - Enter: cd catkin_ws <- enters the directory "catkin_ws"
 - Enter: mkdir src <- creates the directory "src"
 - Enter: cd src <- enters the directory "src"
