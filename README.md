@@ -29,21 +29,53 @@ source /opt/ros/noetic/setup.bash
 echo "source /opt/ros/noetic/setup.bash"
 ```
 - To check if ROS is installed properly, on the terminal enter: 
-```roscore```
+```
+roscore
+```
+```
 - If ROS is correclty installed, no error messages should appear. 
 
 **How to build the ADMA ROS-Driver package?**
 
 - Open a terminal in a folder of choice. This folder will be the installation folder.
-- Enter the following code lines:
-```mkdir catkin_ws``` <- This creates the directory "catkin_ws"
-- Enter: cd catkin_ws <- enters the directory "catkin_ws"
-- Enter: mkdir src <- creates the directory "src"
-- Enter: cd src <- enters the directory "src"
-- Enter: git clone https://github.com/lab176344/adma_ros_driver.git <- clones the source code to the local drive
-- Enter: cd ..  <- goes a folder upwards
-- Enter: catkin_make
-- Enter: source devel/setup.bash
+- Enter:
+```
+mkdir catkin_ws
+``` 
+<- This creates the directory "catkin_ws"
+- Enter: 
+```
+cd catkin_ws
+```
+<- enters the directory "catkin_ws"
+- Enter: 
+```
+mkdir src
+```
+<- creates the directory "src"
+- Enter: 
+```
+cd src
+```
+<- enters the directory "src"
+- Enter: 
+```
+git clone https://github.com/lab176344/adma_ros_driver.git
+```
+<- clones the source code to the local drive
+- Enter: 
+```
+cd ..
+```
+<- goes a folder upwards
+- Enter: 
+```
+catkin_make
+```
+- Enter: 
+```
+source devel/setup.bash
+```
 
 **How to configure the AMDA ROS Driver?**
 
