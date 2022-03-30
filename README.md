@@ -9,7 +9,8 @@ CAN:
 ## Installation of the ROS environment
 
 In the following, it is described how to install the ROS environment from the ground up. 
-Note: If you already have a ROS installation, jump to "Installation of the ADMA ROS-Driver."
+
+**Note**: If you already have a ROS installation, jump to "Installation of the ADMA ROS-Driver."
 
 - Go to http://wiki.ros.org/noetic/Installation/Ubuntu
 - Follow steps 1.1, 1.2 and 1.3
@@ -101,7 +102,7 @@ The ADMA ROS-Driver has to be configured to receive data from the ADMA. This mea
 
 ![Screenshot from 2022-03-28 17-20-54 - Kopie](https://user-images.githubusercontent.com/60926891/160431840-ae510525-2a5f-41b6-92ef-0c723bd96711.png)
 
-Note that the computer where the ADMA ROS-Driver is running should also be configured:
+**Note:** the computer where the ADMA ROS-Driver is running should also be configured:
 - The IP should be assigned
 - The PC and its firewall (if present) should be able to receive data from the corresponding IP and Port. 
 
