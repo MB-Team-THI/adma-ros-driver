@@ -9,7 +9,7 @@ CAN:
 In the following, it is described how to install the ROS driver from the ground up. 
 Note: If you already have a ROS installation, jump to "How to build the ADMA ROS-Driver package?"
 
-## How to install ROS?
+## Installation of the ROS environment
 
 - Go to http://wiki.ros.org/noetic/Installation/Ubuntu
 - Follow steps 1.1, 1.2 and 1.3
