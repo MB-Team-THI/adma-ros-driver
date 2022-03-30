@@ -32,7 +32,6 @@ echo "source /opt/ros/noetic/setup.bash"
 ```
 roscore
 ```
-```
 - If ROS is correclty installed, no error messages should appear. 
 
 **How to build the ADMA ROS-Driver package?**
