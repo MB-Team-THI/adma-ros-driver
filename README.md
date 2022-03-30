@@ -9,14 +9,14 @@ CAN:
 In the following, it is described how to install the ROS driver from the ground up. 
 Note: If you already have a ROS installation, jump to "How to build the ADMA ROS-Driver package?"
 
-## How to install ROS?**
+## How to install ROS?
 
 - Go to http://wiki.ros.org/noetic/Installation/Ubuntu
 - Follow steps 1.1, 1.2 and 1.3
 - From step 1.4, on the Terminal enter: sudo apt update
 - From step 1.4, at least a "Desktop installation". On the Terminal enter: sudo apt install ros-noetic-desktop
 
-### How to update the source folder?**
+### How to update the source folder?
 
 - Open the Terminal and enter: 
 ```
@@ -34,7 +34,7 @@ roscore
 ```
 - If ROS is correclty installed, no error messages should appear. 
 
-**How to build the ADMA ROS-Driver package?**
+## How to build the ADMA ROS-Driver package?
 
 - Open a terminal in a folder of choice. This folder will be the installation folder.
 - Enter:
@@ -76,7 +76,7 @@ catkin_make
 source devel/setup.bash
 ```
 
-**How to configure the AMDA ROS Driver?**
+## How to configure the AMDA ROS Driver?
 
 The ADMA ROS-Driver has to be configured to receive data from the ADMA. This means that the IP and the port have to be updated in the code according to the current ADMA configuration.
 
@@ -97,9 +97,9 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
 - The IP should be assigned
 - The PC and its firewall (if present) should be able to receive data from the corresponding IP and Port. 
 
-**How to use the launch files?**
+## How to use the launch files?
   
- Ethernet:
+ ### When connected via Ethernet:
  - Enter the installation folder
  - Open a terminal and enter: 
  ```
@@ -110,7 +110,7 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
  roslaunch adma_connect ADMA_pub_Ethernet.launch
  ```
  
- CAN:
+ ###  When connected via CAN:
  - Enter the installation folder
  - Open a terminal and enter: 
  ```
@@ -118,12 +118,12 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
  ```
  - You might have to change the parameters in the launch file accordingly to your setup.
 
-**Accessing the ADMA Messages**
+## Accessing the ADMA Messages
 
- - The ROS Messages from the ADMA are published in a custom message called adma under the topic "adma_data"
- There are two manners to test the data reception: a) by means of rostopic echo, and b) via rqt
+ - The ROS Messages from the ADMA are published in a custom message called adma under the topic "adma_data". 
+ There are two manners to test the data reception: a) by means of rostopic echo, and b) via rqt.
  
- a) By means of rostopic echo:
+ ### a) By means of rostopic echo:
  - Enter the installation folder
  - Open a terminal and enter: 
  ```
@@ -135,7 +135,7 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
  ```
  - If the information is being received, it should appear on the terminal
  
- b) Via rqt:
+ ### b) Via rqt:
  - Enter the installation folder
  - Open a terminal and enter: 
  ```
@@ -149,7 +149,7 @@ Note that the computer where the ADMA ROS-Driver is running should also be confi
  - Select the "/adma_connect/adma_data" topic.
  - If the information is being received, it should appear. 
  
-**Credits**
+## Credits
  - The original project can be found here:
  https://github.com/lab176344/adma_ros_driver
  
