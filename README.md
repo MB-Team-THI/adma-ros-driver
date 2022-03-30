@@ -89,20 +89,33 @@ The ADMA ROS-Driver has to be configured to receive data from the ADMA. This mea
 - Open the folder where the ADMA ROS-driver was installed.
 - Inside the installation folder, enter the folder \catkin_ws\src\adma_ros_driver\launch\
 - Inside the folder, open the file: ADMA_pub_Ethernet.launch
-- Update port and IP numbers according to the configuration in the ADMA web interface
+- Update port and IP numbers according to the configuration in the ADMA web interface:
 
 ![Screenshot from 2022-03-28 17-20-54 - Kopie](https://user-images.githubusercontent.com/60926891/160431840-ae510525-2a5f-41b6-92ef-0c723bd96711.png)
 
+Note that the computer where the ADMA ROS-Driver is running should also be configured:
+- The IP should be assigned
+- The PC and its firewall (if present) should be able to receive data from the corresponding IP and Port. 
 
 **How to use the launch files?**
   
  Ethernet:
  - Enter the installation folder
- - Open a terminal and enter: source devel/setup.bash
- - Enter: roslaunch adma_connect ADMA_pub_Ethernet.launch
+ - Open a terminal and enter: 
+ ```
+ source devel/setup.bash
+ ```
+ - Enter: 
+ ```
+ roslaunch adma_connect ADMA_pub_Ethernet.launch
+ ```
  
  CAN:
- - roslaunch ADMA_pub_CAN.launch
+ - Enter the installation folder
+ - Open a terminal and enter: 
+ ```
+ roslaunch ADMA_pub_CAN.launch
+ ```
  - You might have to change the parameters in the launch file accordingly to your setup.
 
 **Accessing the ADMA Messages**
@@ -112,14 +125,26 @@ The ADMA ROS-Driver has to be configured to receive data from the ADMA. This mea
  
  a) By means of rostopic echo:
  - Enter the installation folder
- - Open a terminal and enter: source devel/setup.bash
- - Enter: rostopic echo /adma_connect/adma_data
+ - Open a terminal and enter: 
+ ```
+ source devel/setup.bash
+ ```
+ - Enter: 
+ ```
+ rostopic echo /adma_connect/adma_data
+ ```
  - If the information is being received, it should appear on the terminal
  
- b) Via rqt
+ b) Via rqt:
  - Enter the installation folder
- - Open a terminal and enter: source devel/setup.bash
- - Enter: rqt_topic
+ - Open a terminal and enter: 
+ ```
+ source devel/setup.bash
+ ```
+ - Enter: 
+ ```
+ rqt_topic
+ ```
  - The list of topic will be displayed
  - Select the "/adma_connect/adma_data" topic.
  - If the information is being received, it should appear. 
