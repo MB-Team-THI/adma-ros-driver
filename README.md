@@ -6,15 +6,21 @@ Ethernet:
 CAN:
 - Uses python-can and cantools library for receiving and decoding CAN bus messages. Tested on NVIDA Jetson AGX Xavier
 
-In the following, it is described how to install the ROS driver from the ground up. 
-Note: If you already have a ROS installation, jump to "How to build the ADMA ROS-Driver package?"
-
 ## Installation of the ROS environment
+
+In the following, it is described how to install the ROS environment from the ground up. 
+Note: If you already have a ROS installation, jump to "Installation of the ADMA ROS-Driver."
 
 - Go to http://wiki.ros.org/noetic/Installation/Ubuntu
 - Follow steps 1.1, 1.2 and 1.3
-- From step 1.4, on the Terminal enter: sudo apt update
-- From step 1.4, at least a "Desktop installation". On the Terminal enter: sudo apt install ros-noetic-desktop
+- From step 1.4, on the Terminal enter: 
+```
+sudo apt update
+```
+- From step 1.4, at least a "Desktop installation" is necessary. On the Terminal enter: 
+```
+sudo apt install ros-noetic-desktop
+```
 
 ### How to update the source folder?
 
