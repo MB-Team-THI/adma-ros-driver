@@ -25,6 +25,7 @@ void getParsedData(const std::string& local_data, adma_connect::Adma& message)
     getRatesBodyXYZ(local_data,message);
     getGPSAbs(local_data,message);
     getRatesHorizontalXYZ(local_data,message);
+    getAccelerationBody(local_data, message);
     getAccelerationBodyPOI1(local_data,message);
     getAccelerationBodyPOI2(local_data,message);
     getAccelerationBodyPOI3(local_data,message);
@@ -33,6 +34,7 @@ void getParsedData(const std::string& local_data, adma_connect::Adma& message)
     getAccelerationBodyPOI6(local_data,message);
     getAccelerationBodyPOI7(local_data,message);
     getAccelerationBodyPOI8(local_data,message);
+    getAccelerationHor(local_data, message);
     getAccelerationHorPOI1(local_data,message);
     getAccelerationHorPOI2(local_data,message);
     getAccelerationHorPOI3(local_data,message);
