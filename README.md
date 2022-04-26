@@ -44,6 +44,14 @@ gedit ~/.bashrc
 ```
 This opens the text file to alter the source folder.
 - Once the text file is open, go to the bottom and add the two following lines:
+
+For **Ubuntu 18**:
+```
+source /opt/ros/melodic/setup.bash
+echo "source /opt/ros/melodic/setup.bash"
+```
+
+For **Ubuntu 20**:
 ```
 source /opt/ros/noetic/setup.bash
 echo "source /opt/ros/noetic/setup.bash"
