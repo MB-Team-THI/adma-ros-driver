@@ -12,8 +12,10 @@ In the following, it is described how to install the ROS environment from the gr
 
 **Note**: If you already have a ROS installation, jump to "Installation of the ADMA ROS-Driver."
 
-**Note**: For Ubuntu 18, choose ROS-Melodic:
+**Note**: 
+For Ubuntu 18, choose ROS-Melodic:
 - Go to http://wiki.ros.org/melodic/Installation
+
 For Ubuntu 20, choose ROS-Noetic:
 - Go to http://wiki.ros.org/noetic/Installation/Ubuntu
 
