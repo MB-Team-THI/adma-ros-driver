@@ -25,6 +25,13 @@ For Ubuntu 20, choose ROS-Noetic:
 sudo apt update
 ```
 - From step 1.4, at least a "Desktop installation" is necessary. On the Terminal enter: 
+
+For ROS Melodic:
+```
+sudo apt install ros-melodic-desktop
+```
+
+For ROS Noetic:
 ```
 sudo apt install ros-noetic-desktop
 ```
