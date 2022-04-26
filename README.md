@@ -131,6 +131,7 @@ The ADMA ROS-Driver has to be configured to receive data from the ADMA. This mea
   
  #### a) When connected via Ethernet:
  - Enter the installation folder
+ - Enter the catkin_ws folder
  - Open a terminal and enter: 
  ```
  source devel/setup.bash
