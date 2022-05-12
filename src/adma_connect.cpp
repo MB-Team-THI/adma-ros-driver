@@ -63,6 +63,7 @@ int main(int argc, char **argv)
   /* Establish UDP connection*/
   udp::endpoint local_endpoint = boost::asio::ip::udp::endpoint(address, port);
   std::cout << "Local bind " << local_endpoint << std::endl;
+  unsigned int seq = 0;
   /* Endless loop until ROS is ok*/
   while (ros::ok())
   {
@@ -79,7 +80,12 @@ int main(int argc, char **argv)
     /* Load the messages on the publisers */
     adma_connect::Adma message;
     getParsedData(local_data,message);
+    
     /* publish the ADMA message */
+    // fill timestamp and increment seq counter
+    message.header.stamp = ros::Time::now();
+    message.header.seq = seq++;
+    
     publisher_.publish(message);
     double grab_time = ros::Time::now().toSec();
 
