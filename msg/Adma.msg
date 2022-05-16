@@ -429,8 +429,8 @@ float32 fSystemDSPLoad
 # Position in deg
 int32 GPSLatAbs
 int32 GPSLonAbs
-float32 fGPSLatAbs
-float32 fGPSLonAbs
+float64 fGPSLatAbs
+float64 fGPSLonAbs
 
 # GPS Position Relative
 # Position in m
@@ -579,8 +579,8 @@ int16 LeapSeconds
 # Position in deg
 int32 INSLatAbs
 int32 INSLonAbs
-float32 fINSLatAbs
-float32 fINSLonAbs
+float64 fINSLatAbs
+float64 fINSLonAbs
 
 # INS Position Relative
 # Position in m
@@ -593,8 +593,8 @@ float32 fINSLonRel
 # Position in deg
 int32 INSLatAbs_1
 int32 INSLonAbs_1
-float32 fINSLatAbs_1
-float32 fINSLonAbs_1
+float64 fINSLatAbs_1
+float64 fINSLonAbs_1
 
 # INS Position Relative POS1
 # Position in m
@@ -607,8 +607,8 @@ float32 fINSLonRel_1
 # Position in deg
 int32 INSLatAbs_2
 int32 INSLonAbs_2
-float32 fINSLatAbs_2
-float32 fINSLonAbs_2
+float64 fINSLatAbs_2
+float64 fINSLonAbs_2
 
 # INS Position Relative POS2
 # Position in m
@@ -621,8 +621,8 @@ float32 fINSLonRel_2
 # Position in deg
 int32 INSLatAbs_3
 int32 INSLonAbs_3
-float32 fINSLatAbs_3
-float32 fINSLonAbs_3
+float64 fINSLatAbs_3
+float64 fINSLonAbs_3
 
 # INS Position Relative POS3
 # Position in m
@@ -635,8 +635,8 @@ float32 fINSLonRel_3
 # Position in deg
 int32 INSLatAbs_4
 int32 INSLonAbs_4
-float32 fINSLatAbs_4
-float32 fINSLonAbs_4
+float64 fINSLatAbs_4
+float64 fINSLonAbs_4
 
 # INS Position Relative POS4
 # Position in m
@@ -649,8 +649,8 @@ float32 fINSLonRel_4
 # Position in deg
 int32 INSLatAbs_5
 int32 INSLonAbs_5
-float32 fINSLatAbs_5
-float32 fINSLonAbs_5
+float64 fINSLatAbs_5
+float64 fINSLonAbs_5
 
 # INS Position Relative POS5
 # Position in m
@@ -663,8 +663,8 @@ float32 fINSLonRel_5
 # Position in deg
 int32 INSLatAbs_6
 int32 INSLonAbs_6
-float32 fINSLatAbs_6
-float32 fINSLonAbs_6
+float64 fINSLatAbs_6
+float64 fINSLonAbs_6
 
 # INS Position Relative POS6
 # Position in m
@@ -677,8 +677,8 @@ float32 fINSLonRel_6
 # Position in deg
 int32 INSLatAbs_7
 int32 INSLonAbs_7
-float32 fINSLatAbs_7
-float32 fINSLonAbs_7
+float64 fINSLatAbs_7
+float64 fINSLonAbs_7
 
 # INS Position Relative POS7
 # Position in m
@@ -691,8 +691,8 @@ float32 fINSLonRel_7
 # Position in deg
 int32 INSLatAbs_8
 int32 INSLonAbs_8
-float32 fINSLatAbs_8
-float32 fINSLonAbs_8
+float64 fINSLatAbs_8
+float64 fINSLonAbs_8
 
 # INS Position Relative POS8
 # Position in m
