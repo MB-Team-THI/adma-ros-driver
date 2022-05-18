@@ -1117,10 +1117,10 @@ void getGPSAbs(const std::string& local_data, adma_connect::Adma& message)
     //! GPS Position Absolute
     char GPS_Lat_Abs[] = {local_data[440],local_data[441],local_data[442],local_data[443]};
     memcpy(&message.GPSLatAbs , &GPS_Lat_Abs, sizeof(message.GPSLatAbs));
-    message.dGPSLatAbs = message.GPSLatAbs * 0.0000001;
+    message.fGPSLatAbs = message.GPSLatAbs * 0.0000001;
     char GPS_Lon_Abs[] = {local_data[444],local_data[445],local_data[446],local_data[447]};
     memcpy(&message.GPSLonAbs , &GPS_Lon_Abs, sizeof(message.GPSLonAbs));
-    message.dGPSLonAbs = message.GPSLonAbs * 0.0000001;
+    message.fGPSLonAbs = message.GPSLonAbs * 0.0000001;
 }
 
 /// \file
@@ -1401,10 +1401,10 @@ void getINSPositionAbs(const std::string& local_data, adma_connect::Adma& messag
     //! INS Position Abs
     char INS_Lat_Abs[] = {local_data[592],local_data[593],local_data[594],local_data[595]};
     memcpy(&message.INSLatAbs , &INS_Lat_Abs, sizeof(message.INSLatAbs));
-    message.dINSLatAbs = message.INSLatAbs * 0.0000001;
+    message.fINSLatAbs = message.INSLatAbs * 0.0000001;
     char INS_Lon_Abs[] = {local_data[596],local_data[597],local_data[598],local_data[599]};
     memcpy(&message.INSLonAbs , &INS_Lon_Abs, sizeof(message.INSLonAbs));
-    message.dINSLonAbs = message.INSLonAbs * 0.0000001;
+    message.fINSLonAbs = message.INSLonAbs * 0.0000001;
 }
 
 /// \file
@@ -1431,10 +1431,10 @@ void getINSPosPOI1(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI1
     char INS_Lat_Abs_POI1[] = {local_data[608],local_data[609],local_data[610],local_data[611]};
     memcpy(&message.INSLatAbs_1 , &INS_Lat_Abs_POI1, sizeof(message.INSLatAbs_1));
-    message.dINSLatAbs_1 = message.INSLatAbs_1 * 0.0000001;
+    message.fINSLatAbs_1 = message.INSLatAbs_1 * 0.0000001;
     char INS_Lon_Abs_POI1[] = {local_data[612],local_data[613],local_data[614],local_data[615]};
     memcpy(&message.INSLonAbs_1 , &INS_Lon_Abs_POI1, sizeof(message.INSLonAbs_1));
-    message.dINSLonAbs_1 = message.INSLonAbs_1 * 0.0000001;
+    message.fINSLonAbs_1 = message.INSLonAbs_1 * 0.0000001;
     //! INS Position Rel POI1
     char INS_Lat_Rel_POI1[] = {local_data[616],local_data[617],local_data[618],local_data[619]};
     memcpy(&message.INSLatRel_1 , &INS_Lat_Rel_POI1, sizeof(message.INSLatRel_1));
@@ -1453,10 +1453,10 @@ void getINSPosPOI2(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI2
     char INS_Lat_Abs_POI2[] = {local_data[624],local_data[625],local_data[626],local_data[627]};
     memcpy(&message.INSLatAbs_2 , &INS_Lat_Abs_POI2, sizeof(message.INSLatAbs_2));
-    message.dINSLatAbs_2 = message.INSLatAbs_2 * 0.0000001;
+    message.fINSLatAbs_2 = message.INSLatAbs_2 * 0.0000001;
     char INS_Lon_Abs_POI2[] = {local_data[628],local_data[629],local_data[630],local_data[631]};
     memcpy(&message.INSLonAbs_2 , &INS_Lon_Abs_POI2, sizeof(message.INSLonAbs_2));
-    message.dINSLonAbs_2 = message.INSLonAbs_2 * 0.0000001;
+    message.fINSLonAbs_2 = message.INSLonAbs_2 * 0.0000001;
     //! INS Position Rel POI2
     char INS_Lat_Rel_POI2[] = {local_data[632],local_data[633],local_data[634],local_data[635]};
     memcpy(&message.INSLatRel_2 , &INS_Lat_Rel_POI2, sizeof(message.INSLatRel_2));
@@ -1475,10 +1475,10 @@ void getINSPosPOI3(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI3
     char INS_Lat_Abs_POI3[] = {local_data[640],local_data[641],local_data[642],local_data[643]};
     memcpy(&message.INSLatAbs_3 , &INS_Lat_Abs_POI3, sizeof(message.INSLatAbs_3));
-    message.dINSLatAbs_3 = message.INSLatAbs_3 * 0.0000001;
+    message.fINSLatAbs_3 = message.INSLatAbs_3 * 0.0000001;
     char INS_Lon_Abs_POI3[] = {local_data[644],local_data[645],local_data[646],local_data[647]};
     memcpy(&message.INSLonAbs_3 , &INS_Lon_Abs_POI3, sizeof(message.INSLonAbs_3));
-    message.dINSLonAbs_3 = message.INSLonAbs_3 * 0.0000001;
+    message.fINSLonAbs_3 = message.INSLonAbs_3 * 0.0000001;
     //! INS Position Rel POI3
     char INS_Lat_Rel_POI3[] = {local_data[648],local_data[649],local_data[650],local_data[651]};
     memcpy(&message.INSLatRel_3 , &INS_Lat_Rel_POI3, sizeof(message.INSLatRel_3));
@@ -1497,10 +1497,10 @@ void getINSPosPOI4(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI4
     char INS_Lat_Abs_POI4[] = {local_data[656],local_data[657],local_data[658],local_data[659]};
     memcpy(&message.INSLatAbs_4 , &INS_Lat_Abs_POI4, sizeof(message.INSLatAbs_4));
-    message.dINSLatAbs_4 = message.INSLatAbs_4 * 0.0000001;
+    message.fINSLatAbs_4 = message.INSLatAbs_4 * 0.0000001;
     char INS_Lon_Abs_POI4[] = {local_data[660],local_data[661],local_data[662],local_data[663]};
     memcpy(&message.INSLonAbs_4 , &INS_Lon_Abs_POI4, sizeof(message.INSLonAbs_4));
-    message.dINSLonAbs_4 = message.INSLonAbs_4 * 0.0000001;
+    message.fINSLonAbs_4 = message.INSLonAbs_4 * 0.0000001;
     //! INS Position Rel POI4
     char INS_Lat_Rel_POI4[] = {local_data[664],local_data[665],local_data[666],local_data[667]};
     memcpy(&message.INSLatRel_4 , &INS_Lat_Rel_POI4, sizeof(message.INSLatRel_4));
@@ -1519,10 +1519,10 @@ void getINSPosPOI5(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI5
     char INS_Lat_Abs_POI5[] = {local_data[672],local_data[673],local_data[674],local_data[675]};
     memcpy(&message.INSLatAbs_5 , &INS_Lat_Abs_POI5, sizeof(message.INSLatAbs_5));
-    message.dINSLatAbs_5 = message.INSLatAbs_5 * 0.0000001;
+    message.fINSLatAbs_5 = message.INSLatAbs_5 * 0.0000001;
     char INS_Lon_Abs_POI5[] = {local_data[676],local_data[677],local_data[678],local_data[679]};
     memcpy(&message.INSLonAbs_5 , &INS_Lon_Abs_POI5, sizeof(message.INSLonAbs_5));
-    message.dINSLonAbs_5 = message.INSLonAbs_5 * 0.0000001;
+    message.fINSLonAbs_5 = message.INSLonAbs_5 * 0.0000001;
     //! INS Position Rel POI5
     char INS_Lat_Rel_POI5[] = {local_data[680],local_data[681],local_data[682],local_data[683]};
     memcpy(&message.INSLatRel_5 , &INS_Lat_Rel_POI5, sizeof(message.INSLatRel_5));
@@ -1541,10 +1541,10 @@ void getINSPosPOI6(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI6
     char INS_Lat_Abs_POI6[] = {local_data[688],local_data[689],local_data[690],local_data[691]};
     memcpy(&message.INSLatAbs_6 , &INS_Lat_Abs_POI6, sizeof(message.INSLatAbs_6));
-    message.dINSLatAbs_6 = message.INSLatAbs_6 * 0.0000001;
+    message.fINSLatAbs_6 = message.INSLatAbs_6 * 0.0000001;
     char INS_Lon_Abs_POI6[] = {local_data[692],local_data[693],local_data[694],local_data[695]};
     memcpy(&message.INSLonAbs_6 , &INS_Lon_Abs_POI6, sizeof(message.INSLonAbs_6));
-    message.dINSLonAbs_6 = message.INSLonAbs_6 * 0.0000001;
+    message.fINSLonAbs_6 = message.INSLonAbs_6 * 0.0000001;
     //! INS Position Rel POI6
     char INS_Lat_Rel_POI6[] = {local_data[696],local_data[697],local_data[698],local_data[699]};
     memcpy(&message.INSLatRel_6 , &INS_Lat_Rel_POI6, sizeof(message.INSLatRel_6));
@@ -1563,10 +1563,10 @@ void getINSPosPOI7(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI7
     char INS_Lat_Abs_POI7[] = {local_data[704],local_data[705],local_data[706],local_data[707]};
     memcpy(&message.INSLatAbs_7 , &INS_Lat_Abs_POI7, sizeof(message.INSLatAbs_7));
-    message.dINSLatAbs_7 = message.INSLatAbs_7 * 0.0000001;
+    message.fINSLatAbs_7 = message.INSLatAbs_7 * 0.0000001;
     char INS_Lon_Abs_POI7[] = {local_data[708],local_data[709],local_data[710],local_data[711]};
     memcpy(&message.INSLonAbs_7 , &INS_Lon_Abs_POI7, sizeof(message.INSLonAbs_7));
-    message.dINSLonAbs_7 = message.INSLonAbs_7 * 0.0000001;
+    message.fINSLonAbs_7 = message.INSLonAbs_7 * 0.0000001;
     //! INS Position Rel POI7
     char INS_Lat_Rel_POI7[] = {local_data[712],local_data[713],local_data[714],local_data[715]};
     memcpy(&message.INSLatRel_7 , &INS_Lat_Rel_POI7, sizeof(message.INSLatRel_7));
@@ -1585,10 +1585,10 @@ void getINSPosPOI8(const std::string& local_data, adma_connect::Adma& message)
     //! INS Postion Abs POI8
     char INS_Lat_Abs_POI8[] = {local_data[720],local_data[721],local_data[722],local_data[723]};
     memcpy(&message.INSLatAbs_8 , &INS_Lat_Abs_POI8, sizeof(message.INSLatAbs_8));
-    message.dINSLatAbs_8 = message.INSLatAbs_8 * 0.0000001;
+    message.fINSLatAbs_8 = message.INSLatAbs_8 * 0.0000001;
     char INS_Lon_Abs_POI8[] = {local_data[724],local_data[725],local_data[726],local_data[727]};
     memcpy(&message.INSLonAbs_8 , &INS_Lon_Abs_POI8, sizeof(message.INSLonAbs_8));
-    message.dINSLonAbs_8 = message.INSLonAbs_8 * 0.0000001;
+    message.fINSLonAbs_8 = message.INSLonAbs_8 * 0.0000001;
     //! INS Position Rel POI8
     char INS_Lat_Rel_POI8[] = {local_data[728],local_data[729],local_data[730],local_data[731]};
     memcpy(&message.INSLatRel_8 , &INS_Lat_Rel_POI8, sizeof(message.INSLatRel_8));
