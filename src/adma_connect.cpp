@@ -85,8 +85,8 @@ int main(int argc, char **argv)
     // fill timestamp and increment seq counter
     message.header.stamp = ros::Time::now();
     message.header.seq = seq++;
-    
-    publisher_.publish(message);
+
+    /* Get current time */
     double grab_time = ros::Time::now().toSec();
 
     if (performance_check)
@@ -98,6 +98,10 @@ int main(int argc, char **argv)
     }
     message.TimeMsec = ros::Time::now().toSec()*1000;
     message.TimeNsec = ros::Time::now().toNSec();
+    
+    /* publish ADMA message */
+    publisher_.publish(message);
+    
     /* Loop rate maintain*/
     ros::spinOnce();
     loop_rate.sleep();
