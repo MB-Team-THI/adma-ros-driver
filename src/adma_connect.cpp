@@ -14,6 +14,7 @@
 #include <fstream>
 #include <adma_connect/Adma.h>
 #include <adma_connect/adma_parse.h>
+#include "std_msgs/String.h"
 
 /** \namespace BOOST UDP link*/
 using boost::asio::ip::udp;
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
 
   /* Initiliaze publisher */
   ros::Publisher  publisher_  = nh.advertise<adma_connect::Adma>("adma_data",1);
+  ros::Publisher  raw_publisher_  = nh.advertise<std_msgs::String>("raw_adma_data",1);
 
   /* Initilaize loop rate */
   ros::Rate loop_rate(loopSpeed);
@@ -78,6 +80,8 @@ int main(int argc, char **argv)
     /* Prepare for parsing */
     std::string local_data(recv_buf.begin(), recv_buf.end());
     /* Load the messages on the publisers */
+    std_msgs::String msg_raw_adma;
+    msg_raw_adma.data = local_data;
     adma_connect::Adma message;
     getParsedData(local_data,message);
     
@@ -85,7 +89,8 @@ int main(int argc, char **argv)
     // fill timestamp and increment seq counter
     message.header.stamp = ros::Time::now();
     message.header.seq = seq++;
-
+    msg_raw_adma.header.stamp = ros::Time::now();
+    msg_raw_adma.header.seq = seq++;
     /* Get current time */
     double grab_time = ros::Time::now().toSec();
 
@@ -101,7 +106,7 @@ int main(int argc, char **argv)
     
     /* publish ADMA message */
     publisher_.publish(message);
-    
+    raw_publisher_.publish(msg_raw_adma);
     /* Loop rate maintain*/
     ros::spinOnce();
     loop_rate.sleep();
