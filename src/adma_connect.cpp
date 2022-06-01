@@ -89,8 +89,7 @@ int main(int argc, char **argv)
     // fill timestamp and increment seq counter
     message.header.stamp = ros::Time::now();
     message.header.seq = seq++;
-    msg_raw_adma.header.stamp = ros::Time::now();
-    msg_raw_adma.header.seq = seq++;
+
     /* Get current time */
     double grab_time = ros::Time::now().toSec();
 
