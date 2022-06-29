@@ -13,7 +13,7 @@ uint32 configversion
 uint32 configsize
 uint32 byteoffset
 uint32 slicesize
-#byte slicedata
+uint32 slicedata
 
 # status
 int32 statusgpsmode
@@ -481,8 +481,10 @@ uint16 gpstrigger
 # gpsdiffage in s
 uint16 gpsdiffage
 float64 fgpsdiffage
-int8 gpsstatsused
-int8 gpsstatsvisible
+int8 gpssatsused
+int8 gpssatsvisible
+int8 gpssatsdualantused
+int8 gpssatsdualantvisible
 
 # gps auxdata 2
 # gpslogdelay in ta
@@ -529,6 +531,10 @@ int8 gpsdualantstddevheading
 int8 gpsdualantstddevpitch
 float64 fgpsdualantstddevheading
 float64 fgpsdualantstddevpitch
+int8 gpsdualantstddevheading_hr
+int8 gpsdualantstddevpitch_hr
+float32 fgpsdualantstddevheading_hr
+float32 fgpsdualantstddevpitch_hr
 
 # ins position height (msl)
 int32 insheight

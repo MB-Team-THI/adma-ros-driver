@@ -21,6 +21,7 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getratesbodyxyz(local_data,message);
     getgpsabs(local_data,message);
     getrateshorizontalxyz(local_data,message);
+    getaccelerationbody(local_data, message);
     getaccelerationbodypoi1(local_data,message);
     getaccelerationbodypoi2(local_data,message);
     getaccelerationbodypoi3(local_data,message);
@@ -29,6 +30,7 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getaccelerationbodypoi6(local_data,message);
     getaccelerationbodypoi7(local_data,message);
     getaccelerationbodypoi8(local_data,message);
+    getaccelerationhor(local_data,message);
     getaccelerationhorpoi1(local_data,message);
     getaccelerationhorpoi2(local_data,message);
     getaccelerationhorpoi3(local_data,message);
@@ -137,6 +139,7 @@ void getadmadynamicheader(const std::string& local_data, adma_msgs::msg::AdmaDat
     char slicesize[] = {local_data[88],local_data[89],local_data[90],local_data[91]};
     memcpy(&message.slicesize , &slicesize, sizeof(message.slicesize));
     char slicedata[] = {local_data[92],local_data[93],local_data[94],local_data[95]};
+    memcpy(&message.slicedata, &slicedata, sizeof(message.slicedata));
 
 }
 
@@ -168,11 +171,11 @@ void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& messa
     }
     else if (rtk_coarse) 
     {
-        message.statusgpsmode = 3;
+        message.statusgpsmode = 4;
     }
     else if (rtk_precise) 
     {
-        message.statusgpsmode = 4;
+        message.statusgpsmode = 8;
     }
     /* status stand still */
     message.statusstandstill = standstill_c;
@@ -1111,7 +1114,7 @@ void getgpsabs(const std::string& local_data, adma_msgs::msg::AdmaData& message)
     //! gps position absolute
     char gps_lat_abs[] = {local_data[440],local_data[441],local_data[442],local_data[443]};
     memcpy(&message.gpslatabs , &gps_lat_abs, sizeof(message.gpslatabs));
-    message.fgpslatabs = message.gpslatabs * 0.0000001; 
+    message.fgpslatabs = message.gpslatabs * 0.0000001;
     char gps_lon_abs[] = {local_data[444],local_data[445],local_data[446],local_data[447]};
     memcpy(&message.gpslonabs , &gps_lon_abs, sizeof(message.gpslonabs));
     message.fgpslonabs = message.gpslonabs * 0.0000001;
@@ -1216,11 +1219,14 @@ void getgpsauxdata1(const std::string& local_data, adma_msgs::msg::AdmaData& mes
     char gps_diff_age[] = {local_data[488],local_data[489]};
     memcpy(&message.gpsdiffage , &gps_diff_age, sizeof(message.gpsdiffage));
     message.fgpsdiffage = message.gpsdiffage * 0.1;  
-    char gps_stats_used[] = {local_data[490]};
-    memcpy(&message.gpsstatsused , &gps_stats_used, sizeof(message.gpsstatsused));
-    char gps_stats_visible[] = {local_data[491]};
-    memcpy(&message.gpsstatsvisible , &gps_stats_visible, sizeof(message.gpsstatsvisible));
-
+    char gps_sats_used[] = {local_data[490]};
+    memcpy(&message.gpssatsused , &gps_sats_used, sizeof(message.gpssatsused));
+    char gps_sats_visible[] = {local_data[491]};
+    memcpy(&message.gpssatsvisible , &gps_sats_visible, sizeof(message.gpssatsvisible));
+    char gps_stats_dual_ant_visible[] = {local_data[492]};
+    memcpy(&message.gpssatsdualantused , &gps_stats_dual_ant_visible, sizeof(message.gpssatsdualantused));
+    char gps_sats_dual_ant_visible[] = {local_data[493]};
+    memcpy(&message.gpssatsdualantvisible , &gps_sats_dual_ant_visible, sizeof(message.gpssatsdualantvisible));
 }
 /// \file
 /// \brief  getgpsabs function - adma expected velocity error
@@ -1314,7 +1320,13 @@ void getgpsdualantangleete(const std::string& local_data, adma_msgs::msg::AdmaDa
     message.fgpsdualantstddevheading = message.gpsdualantstddevheading * 0.01;  
     char gps_dualant_stddev_pitch[] = {local_data[537]};
     memcpy(&message.gpsdualantstddevpitch , &gps_dualant_stddev_pitch, sizeof(message.gpsdualantstddevpitch));
-    message.fgpsdualantstddevpitch = message.gpsdualantstddevpitch * 0.01;  
+    message.fgpsdualantstddevpitch = message.gpsdualantstddevpitch * 0.01;
+    char gps_dualant_stddev_heading_hr[] =  {local_data[538], local_data[539]};
+    memcpy(&message.gpsdualantstddevheading_hr , &gps_dualant_stddev_heading_hr, sizeof(message.gpsdualantstddevheading_hr));
+    message.fgpsdualantstddevheading_hr = message.gpsdualantstddevheading_hr * 0.01;  
+    char gps_dualant_stddev_pitch_hr[] = {local_data[540], local_data[541]};
+    memcpy(&message.gpsdualantstddevpitch_hr , &gps_dualant_stddev_pitch_hr, sizeof(message.gpsdualantstddevpitch_hr));
+    message.fgpsdualantstddevpitch_hr = message.gpsdualantstddevpitch_hr * 0.01;
 }
 
 
