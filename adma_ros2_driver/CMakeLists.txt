@@ -20,7 +20,7 @@ find_package(Boost REQUIRED COMPONENTS system date_time)
 include_directories(
   include
   ${adma_msgs_INCLUDE_DIRS}
-  SYSTEM {Boost_INCLUDE_DIRS}
+  SYSTEM ${Boost_INCLUDE_DIRS}
 )
 
 add_library(adma_connect_core
@@ -29,6 +29,8 @@ add_library(adma_connect_core
 
 ament_target_dependencies(adma_connect_core
   adma_msgs
+  std_msgs
+  sensor_msgs
 )
 
 
