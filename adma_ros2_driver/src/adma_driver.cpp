@@ -22,9 +22,9 @@ public:
 
     /* Initialize publishers */
     adma_data_publisher = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
-    navsat_fix_publisher = this->create_publisher<sensor_msgs::msg::NavSatFix>("gps/fix", 1);
-    heading_publisher = this->create_publisher<std_msgs::msg::Float64>("gps/heading", 1);
-    velocity_publisher = this->create_publisher<std_msgs::msg::Float64>("gps/velocity", 1);
+    navsat_fix_publisher = this->create_publisher<sensor_msgs::msg::NavSatFix>("adma/nav_sat_fix", 1);
+    heading_publisher = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
+    velocity_publisher = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
     /* \brief IP address to which ADMA broadcasts */
     performance_check = this->get_parameter("performance_check").as_bool();
