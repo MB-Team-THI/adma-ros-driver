@@ -23,6 +23,7 @@ public:
     /* Initialize publishers */
     adma_data_publisher = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
     navsat_fix_publisher = this->create_publisher<sensor_msgs::msg::NavSatFix>("adma/nav_sat_fix", 1);
+    imu_publisher = this->create_publisher<sensor_msgs::msg::Imu>("adma/imu", 1);
     heading_publisher = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
     velocity_publisher = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
@@ -55,14 +56,19 @@ public:
     message_admadata.timensec = this->get_clock()->now().nanoseconds();
     sensor_msgs::msg::NavSatFix message_navsatfix;
     message_navsatfix.header.stamp = this->get_clock()->now();
-    message_navsatfix.header.frame_id = "adma";
+    message_navsatfix.header.frame_id = "gnss_link";
+    sensor_msgs::msg::Imu message_imu;
+    message_imu.header.stamp = this->get_clock()->now();
+    message_imu.header.frame_id = "imu_link";
+
     std_msgs::msg::Float64 message_heading;
     std_msgs::msg::Float64 message_velocity;
-    getparseddata(local_data, message_admadata, message_navsatfix, message_heading, message_velocity);
+    getparseddata(local_data, message_admadata, message_navsatfix, message_imu, message_heading, message_velocity);
 
     /* publish the ADMA message */
     adma_data_publisher->publish(message_admadata);
     navsat_fix_publisher->publish(message_navsatfix);
+    imu_publisher->publish(message_imu);
     heading_publisher->publish(message_heading);
     velocity_publisher->publish(message_velocity);
 
@@ -84,6 +90,7 @@ private:
 
   rclcpp::Publisher<adma_msgs::msg::AdmaData>::SharedPtr adma_data_publisher;
   rclcpp::Publisher<sensor_msgs::msg::NavSatFix>::SharedPtr navsat_fix_publisher;
+  rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_publisher;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr heading_publisher;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr velocity_publisher;
 };

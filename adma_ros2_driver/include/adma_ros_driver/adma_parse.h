@@ -2,12 +2,18 @@
 #include "adma_msgs/msg/adma_data.hpp"
 #include "std_msgs/msg/float64.hpp"
 #include "sensor_msgs/msg/nav_sat_fix.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 #include <bitset>
 
 
 
 
-void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix, std_msgs::msg::Float64& msg_heading, std_msgs::msg::Float64& msg_velocity);
+void getparseddata(const std::string& local_data, 
+                   adma_msgs::msg::AdmaData& message, 
+                   sensor_msgs::msg::NavSatFix& msg_fix, 
+                   sensor_msgs::msg::Imu& msg_imu, 
+                   std_msgs::msg::Float64& msg_heading, 
+                   std_msgs::msg::Float64& msg_velocity);
 void getadmastaticheader(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getadmadynamicheader(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message);
@@ -15,7 +21,7 @@ void getstatustrigger(const std::string& local_data, adma_msgs::msg::AdmaData& m
 void getevkstatus(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getstatuscount(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void geterrorandwarning(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& message);
+void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu);
 void getratesbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getrateshorizontalxyz(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getaccelerationbody(const std::string& local_data, adma_msgs::msg::AdmaData& message);
@@ -60,7 +66,7 @@ void getgpsveleve(const std::string& local_data, adma_msgs::msg::AdmaData& messa
 void getgpstimeutc(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgpsauxdata1(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgpsauxdata2(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-void getinsanglegpscog(const std::string& local_data, adma_msgs::msg::AdmaData& message, std_msgs::msg::Float64& msg_heading);
+void getinsanglegpscog(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu, std_msgs::msg::Float64& msg_heading);
 void getgpsheight(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgpsdualanttimeutc(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgpsdualantangle(const std::string& local_data, adma_msgs::msg::AdmaData& message);
@@ -89,7 +95,7 @@ void getinsvelhorxyzpos6(const std::string& local_data, adma_msgs::msg::AdmaData
 void getinsvelhorxyzpos7(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getinsvelhorxyzpos8(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& message);
+void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu);
 void getanalog(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getkalmanfilter(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgnssreceiver(const std::string& local_data, adma_msgs::msg::AdmaData& message);
