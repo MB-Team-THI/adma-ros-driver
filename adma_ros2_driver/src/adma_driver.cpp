@@ -16,7 +16,7 @@ public:
   ADMA_driver() : Node("adma_ros_driver"), socket(io_service)
   {
     /* Declare Parameters */
-    this->declare_parameter<std::string>("destination_ip", std::string("10.0.0.2"));
+    this->declare_parameter<std::string>("destination_ip", std::string("192.168.88.100"));
     this->declare_parameter<int>("destination_port", 1040);
     this->declare_parameter<bool>("performance_check", false);
 

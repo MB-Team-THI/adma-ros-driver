@@ -10,9 +10,16 @@ def generate_launch_description():
             output="screen",
             emulate_tty=True,
             parameters=[
-                {"dest_ip": "10.0.0.2"},
-                {"dest_port": 1040},
-                {"performance_check": False} 
+                {"destination_ip":          "192.168.88.100"},  # "ADMA Webinterface -> Data -> Ethernet data output -> Destination IP"
+                {"destination_port":        1040},              # "ADMA Webinterface -> Data -> Ethernet data output -> Destination Port"
+                {"performance_check":       False},
+                {"adma_data_topic":         "adma/data"},
+                {"adma_navsatfix_topic":    "adma/fix"},
+                {"adma_imu_topic":          "adma/imu"},
+                {"adma_heading_topic":      "adma/heading"},
+                {"adma_velocity_topic":     "adma/velocity"},
+                {"gnss_frame":              "gnss_link"},
+                {"imu_frame":               "imu_link"},
             ]
         )
     ])
