@@ -1422,7 +1422,7 @@ void getinspositionabs(const std::string& local_data, adma_msgs::msg::AdmaData& 
     char ins_lat_abs[] = {local_data[592],local_data[593],local_data[594],local_data[595]};
     memcpy(&message.inslatabs , &ins_lat_abs, sizeof(message.inslatabs));
     message.finslatabs = message.inslatabs * 0.0000001;
-    msg_fix.latitude = message.fgpslatabs;
+    msg_fix.latitude = message.finslatabs;
     char ins_lon_abs[] = {local_data[596],local_data[597],local_data[598],local_data[599]};
     memcpy(&message.inslonabs , &ins_lon_abs, sizeof(message.inslonabs));
     message.finslonabs = message.inslonabs * 0.0000001;
