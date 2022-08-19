@@ -14,7 +14,7 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
 {
     getadmastaticheader(local_data,message);
     getadmadynamicheader(local_data,message);
-    getstatusgps(local_data,message);
+    getstatusgps(local_data,message, msg_fix);
     getstatustrigger(local_data,message);
     getstatuscount(local_data,message); 
     getevkstatus(local_data,message);
@@ -69,7 +69,7 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getgpsdualanttimeutc(local_data,message);
     getgpsdualantangle(local_data,message);
     getgpsdualantangleete(local_data,message);
-    getinspositionheight(local_data,message);
+    getinspositionheight(local_data,message, msg_fix);
     getinspositionpoi(local_data,message);
     getinstimeutc(local_data,message);
     getinspositionabs(local_data,message,msg_fix);
@@ -92,7 +92,7 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getinsvelhorxyzpos6(local_data,message);
     getinsvelhorxyzpos7(local_data,message);
     getinsvelhorxyzpos8(local_data,message);
-    getinsepe(local_data,message);
+    getinsepe(local_data,message, msg_fix);
     getinseveandete(local_data,message, msg_imu);
     getanalog(local_data,message);
     getkalmanfilter(local_data,message);
@@ -149,7 +149,7 @@ void getadmadynamicheader(const std::string& local_data, adma_msgs::msg::AdmaDat
 /// \brief  getstatusgps function - adma status information
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix)
 {
     unsigned char statusgps;
     char status_gps[] = {local_data[96]};
@@ -166,18 +166,22 @@ void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& messa
     if(gps_out)
     {
         message.statusgpsmode = 1;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX; // No GNSS Data
     }
     else if (gps_mode) 
     {
         message.statusgpsmode = 2;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_FIX; // single GNSS
     }
     else if (rtk_coarse) 
     {
         message.statusgpsmode = 4;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX; // actually DGNSS Coarse Mode, but used to distinguish here 
     }
     else if (rtk_precise) 
     {
         message.statusgpsmode = 8;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_GBAS_FIX; // DGNSS Precise Mode
     }
     /* status stand still */
     message.statusstandstill = standstill_c;
@@ -1349,11 +1353,12 @@ void getgpsdualantangleete(const std::string& local_data, adma_msgs::msg::AdmaDa
 /// \brief  getgpsdualantangleete function - adma gps dual ant angle ete
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getinspositionheight(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getinspositionheight(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix)
 {
     char ins_height[] = {local_data[544],local_data[545],local_data[546],local_data[547]};
     memcpy(&message.insheight , &ins_height, sizeof(message.insheight));
     message.finsheight = message.insheight * 0.01;
+    msg_fix.altitude = message.finsheight;
 }
 
 /// \file
@@ -1802,7 +1807,7 @@ void getinsvelhorxyzpos8(const std::string& local_data, adma_msgs::msg::AdmaData
 /// \brief  getinsepe function - adma ins sepe
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix)
 {
     //! ins epe
     char ins_stddev_lat[] = {local_data[816],local_data[817]};
@@ -1814,6 +1819,12 @@ void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message)
     char ins_stddev_height[] = {local_data[820],local_data[821]};
     memcpy(&message.insstddevheight , &ins_stddev_height, sizeof(message.insstddevheight));
     message.finsstddevheight = message.insstddevheight * 0.01;
+
+    // Components of position_covarionce are in East-North-Up order
+    msg_fix.position_covariance[0] = message.finsstddevlat*message.finsstddevlat;
+    msg_fix.position_covariance[4] = message.finsstddevlong*message.finsstddevlong;
+    msg_fix.position_covariance[8] = message.finsstddevheight*message.finsstddevheight;
+    msg_fix.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 }
 
 /// \file

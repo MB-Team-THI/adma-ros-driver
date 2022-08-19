@@ -16,7 +16,7 @@ void getparseddata(const std::string& local_data,
                    std_msgs::msg::Float64& msg_velocity);
 void getadmastaticheader(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getadmadynamicheader(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message);
+void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix);
 void getstatustrigger(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getevkstatus(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getstatuscount(const std::string& local_data, adma_msgs::msg::AdmaData& message);
@@ -71,7 +71,7 @@ void getgpsheight(const std::string& local_data, adma_msgs::msg::AdmaData& messa
 void getgpsdualanttimeutc(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgpsdualantangle(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgpsdualantangleete(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-void getinspositionheight(const std::string& local_data, adma_msgs::msg::AdmaData& message);
+void getinspositionheight(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix);
 void getinspositionpoi(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getinstimeutc(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getinspositionabs(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix);
@@ -94,7 +94,7 @@ void getinsvelhorxyzpos5(const std::string& local_data, adma_msgs::msg::AdmaData
 void getinsvelhorxyzpos6(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getinsvelhorxyzpos7(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getinsvelhorxyzpos8(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message);
+void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix);
 void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu);
 void getanalog(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getkalmanfilter(const std::string& local_data, adma_msgs::msg::AdmaData& message);
