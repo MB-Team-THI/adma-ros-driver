@@ -4,23 +4,26 @@
 #include <iostream>
 #include <sstream>
 #include <math.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
 using namespace std;
 
 #define PI 3.1415926535897932384626433832795028841971f
 
-void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix, std_msgs::msg::Float64& msg_heading, std_msgs::msg::Float64& msg_velocity)
+void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix, sensor_msgs::msg::Imu& msg_imu, std_msgs::msg::Float64& msg_heading, std_msgs::msg::Float64& msg_velocity)
 {
     getadmastaticheader(local_data,message);
     getadmadynamicheader(local_data,message);
-    getstatusgps(local_data,message);
+    getstatusgps(local_data,message, msg_fix);
     getstatustrigger(local_data,message);
     getstatuscount(local_data,message); 
     getevkstatus(local_data,message);
     geterrorandwarning(local_data,message);
-    getsensorbodyxyz(local_data,message);
+    getsensorbodyxyz(local_data,message, msg_imu);
     getratesbodyxyz(local_data,message);
     getgpsabs(local_data,message);
     getrateshorizontalxyz(local_data,message);
+    getaccelerationbody(local_data, message);
     getaccelerationbodypoi1(local_data,message);
     getaccelerationbodypoi2(local_data,message);
     getaccelerationbodypoi3(local_data,message);
@@ -29,6 +32,7 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getaccelerationbodypoi6(local_data,message);
     getaccelerationbodypoi7(local_data,message);
     getaccelerationbodypoi8(local_data,message);
+    getaccelerationhor(local_data,message);
     getaccelerationhorpoi1(local_data,message);
     getaccelerationhorpoi2(local_data,message);
     getaccelerationhorpoi3(local_data,message);
@@ -60,12 +64,12 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getgpstimeutc(local_data,message);
     getgpsauxdata1(local_data,message);
     getgpsauxdata2(local_data,message);
-    getinsanglegpscog(local_data,message, msg_heading);
+    getinsanglegpscog(local_data,message, msg_imu, msg_heading);
     getgpsheight(local_data,message);
     getgpsdualanttimeutc(local_data,message);
     getgpsdualantangle(local_data,message);
     getgpsdualantangleete(local_data,message);
-    getinspositionheight(local_data,message);
+    getinspositionheight(local_data,message, msg_fix);
     getinspositionpoi(local_data,message);
     getinstimeutc(local_data,message);
     getinspositionabs(local_data,message,msg_fix);
@@ -88,8 +92,8 @@ void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& mess
     getinsvelhorxyzpos6(local_data,message);
     getinsvelhorxyzpos7(local_data,message);
     getinsvelhorxyzpos8(local_data,message);
-    getinsepe(local_data,message);
-    getinseveandete(local_data,message);
+    getinsepe(local_data,message, msg_fix);
+    getinseveandete(local_data,message, msg_imu);
     getanalog(local_data,message);
     getkalmanfilter(local_data,message);
     getgnssreceiver(local_data,message);
@@ -137,6 +141,7 @@ void getadmadynamicheader(const std::string& local_data, adma_msgs::msg::AdmaDat
     char slicesize[] = {local_data[88],local_data[89],local_data[90],local_data[91]};
     memcpy(&message.slicesize , &slicesize, sizeof(message.slicesize));
     char slicedata[] = {local_data[92],local_data[93],local_data[94],local_data[95]};
+    memcpy(&message.slicedata, &slicedata, sizeof(message.slicedata));
 
 }
 
@@ -144,7 +149,7 @@ void getadmadynamicheader(const std::string& local_data, adma_msgs::msg::AdmaDat
 /// \brief  getstatusgps function - adma status information
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix)
 {
     unsigned char statusgps;
     char status_gps[] = {local_data[96]};
@@ -161,18 +166,22 @@ void getstatusgps(const std::string& local_data, adma_msgs::msg::AdmaData& messa
     if(gps_out)
     {
         message.statusgpsmode = 1;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX; // No GNSS Data
     }
     else if (gps_mode) 
     {
         message.statusgpsmode = 2;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_FIX; // single GNSS
     }
     else if (rtk_coarse) 
     {
-        message.statusgpsmode = 3;
+        message.statusgpsmode = 4;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX; // actually DGNSS Coarse Mode, but used to distinguish here 
     }
     else if (rtk_precise) 
     {
-        message.statusgpsmode = 4;
+        message.statusgpsmode = 8;
+        msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_GBAS_FIX; // DGNSS Precise Mode
     }
     /* status stand still */
     message.statusstandstill = standstill_c;
@@ -347,34 +356,40 @@ void geterrorandwarning(const std::string& local_data, adma_msgs::msg::AdmaData&
 /// \brief  getsensorbodyxyz function - adma sensor body x y z acc and rate information
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu)
 {
     //! sensor body x
     char acc_body_hr_x[] = {local_data[112],local_data[113],local_data[114],local_data[115]};
     memcpy(&message.accbodyhrx , &acc_body_hr_x, sizeof(message.accbodyhrx));
     message.faccbodyhrx = message.accbodyhrx * 0.0001;
+    msg_imu.linear_acceleration.x = message.faccbodyhrx * 9.81;
     
     char rate_body_hr_x[] = {local_data[116],local_data[117],local_data[118],local_data[119]};
     memcpy(&message.ratebodyhrx , &rate_body_hr_x, sizeof(message.ratebodyhrx));
     message.fratebodyhrx = message.ratebodyhrx * 0.0001;
+    msg_imu.angular_velocity.x = message.fratebodyhrx * M_PI / 180.0;
 
     //! sensor body y
     char acc_body_hr_y[] = {local_data[120],local_data[121],local_data[122],local_data[123]};
     memcpy(&message.accbodyhry , &acc_body_hr_y, sizeof(message.accbodyhry));
     message.faccbodyhry = message.accbodyhry * 0.0001;   
+    msg_imu.linear_acceleration.y = message.faccbodyhry * 9.81;
     
     char rate_body_hr_y[] = {local_data[124],local_data[125],local_data[126],local_data[127]};
     memcpy(&message.ratebodyhry , &rate_body_hr_y, sizeof(message.ratebodyhry));
     message.fratebodyhry = message.ratebodyhry * 0.0001;
+    msg_imu.angular_velocity.y = message.fratebodyhry * M_PI / 180.0;
 
     //! sensor body z
     char acc_body_hr_z[] = {local_data[128],local_data[129],local_data[130],local_data[131]};
     memcpy(&message.accbodyhrz , &acc_body_hr_z, sizeof(message.accbodyhrz));
     message.faccbodyhrz = message.accbodyhrz * 0.0001;
+    msg_imu.linear_acceleration.z = message.faccbodyhrz * 9.81;
 
     char rate_body_hr_z[] = {local_data[132],local_data[133],local_data[134],local_data[135]};
     memcpy(&message.ratebodyhrz , &rate_body_hr_z, sizeof(message.ratebodyhrz));
     message.fratebodyhrz = message.ratebodyhrz * 0.0001;
+    msg_imu.angular_velocity.z = message.fratebodyhrz * M_PI / 180.0;
 
 }
 
@@ -1111,7 +1126,7 @@ void getgpsabs(const std::string& local_data, adma_msgs::msg::AdmaData& message)
     //! gps position absolute
     char gps_lat_abs[] = {local_data[440],local_data[441],local_data[442],local_data[443]};
     memcpy(&message.gpslatabs , &gps_lat_abs, sizeof(message.gpslatabs));
-    message.fgpslatabs = message.gpslatabs * 0.0000001; 
+    message.fgpslatabs = message.gpslatabs * 0.0000001;
     char gps_lon_abs[] = {local_data[444],local_data[445],local_data[446],local_data[447]};
     memcpy(&message.gpslonabs , &gps_lon_abs, sizeof(message.gpslonabs));
     message.fgpslonabs = message.gpslonabs * 0.0000001;
@@ -1216,11 +1231,14 @@ void getgpsauxdata1(const std::string& local_data, adma_msgs::msg::AdmaData& mes
     char gps_diff_age[] = {local_data[488],local_data[489]};
     memcpy(&message.gpsdiffage , &gps_diff_age, sizeof(message.gpsdiffage));
     message.fgpsdiffage = message.gpsdiffage * 0.1;  
-    char gps_stats_used[] = {local_data[490]};
-    memcpy(&message.gpsstatsused , &gps_stats_used, sizeof(message.gpsstatsused));
-    char gps_stats_visible[] = {local_data[491]};
-    memcpy(&message.gpsstatsvisible , &gps_stats_visible, sizeof(message.gpsstatsvisible));
-
+    char gps_sats_used[] = {local_data[490]};
+    memcpy(&message.gpssatsused , &gps_sats_used, sizeof(message.gpssatsused));
+    char gps_sats_visible[] = {local_data[491]};
+    memcpy(&message.gpssatsvisible , &gps_sats_visible, sizeof(message.gpssatsvisible));
+    char gps_stats_dual_ant_visible[] = {local_data[492]};
+    memcpy(&message.gpssatsdualantused , &gps_stats_dual_ant_visible, sizeof(message.gpssatsdualantused));
+    char gps_sats_dual_ant_visible[] = {local_data[493]};
+    memcpy(&message.gpssatsdualantvisible , &gps_sats_dual_ant_visible, sizeof(message.gpssatsdualantvisible));
 }
 /// \file
 /// \brief  getgpsabs function - adma expected velocity error
@@ -1241,12 +1259,12 @@ void getgpsauxdata2(const std::string& local_data, adma_msgs::msg::AdmaData& mes
 /// \brief  getgpsabs function - adma expected velocity error
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getinsanglegpscog(const std::string& local_data, adma_msgs::msg::AdmaData& message, std_msgs::msg::Float64& msg_heading)
+void getinsanglegpscog(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu, std_msgs::msg::Float64& msg_heading)
 {
     //! ins angle and gps cog
     char ins_roll[] = {local_data[504],local_data[505]};
     memcpy(&message.insroll , &ins_roll, sizeof(message.insroll));
-    message.finsroll = message.insroll * 0.01;  
+    message.finsroll = message.insroll * 0.01;
     char ins_pitch[] = {local_data[506],local_data[507]};
     memcpy(&message.inspitch , &ins_pitch, sizeof(message.inspitch));
     message.finspitch = message.inspitch * 0.01;  
@@ -1256,7 +1274,14 @@ void getinsanglegpscog(const std::string& local_data, adma_msgs::msg::AdmaData& 
     msg_heading.data = message.finsyaw;
     char gps_cog[] = {local_data[510],local_data[511]};
     memcpy(&message.gpscog , &gps_cog, sizeof(message.gpscog));
-    message.fgpscog = message.gpscog * 0.01;  
+    message.fgpscog = message.gpscog * 0.01; 
+
+    tf2::Quaternion q;
+    double roll_rad = message.finsroll * M_PI / 180.0;
+    double pitch_rad = message.finspitch * M_PI / 180.0;
+    double yaw_rad = message.finsyaw * M_PI / 180.0;
+    q.setRPY(roll_rad, pitch_rad, yaw_rad);
+    msg_imu.orientation = tf2::toMsg(q);
 }
 
 /// \file
@@ -1314,7 +1339,13 @@ void getgpsdualantangleete(const std::string& local_data, adma_msgs::msg::AdmaDa
     message.fgpsdualantstddevheading = message.gpsdualantstddevheading * 0.01;  
     char gps_dualant_stddev_pitch[] = {local_data[537]};
     memcpy(&message.gpsdualantstddevpitch , &gps_dualant_stddev_pitch, sizeof(message.gpsdualantstddevpitch));
-    message.fgpsdualantstddevpitch = message.gpsdualantstddevpitch * 0.01;  
+    message.fgpsdualantstddevpitch = message.gpsdualantstddevpitch * 0.01;
+    char gps_dualant_stddev_heading_hr[] =  {local_data[538], local_data[539]};
+    memcpy(&message.gpsdualantstddevheading_hr , &gps_dualant_stddev_heading_hr, sizeof(message.gpsdualantstddevheading_hr));
+    message.fgpsdualantstddevheading_hr = message.gpsdualantstddevheading_hr * 0.01;  
+    char gps_dualant_stddev_pitch_hr[] = {local_data[540], local_data[541]};
+    memcpy(&message.gpsdualantstddevpitch_hr , &gps_dualant_stddev_pitch_hr, sizeof(message.gpsdualantstddevpitch_hr));
+    message.fgpsdualantstddevpitch_hr = message.gpsdualantstddevpitch_hr * 0.01;
 }
 
 
@@ -1322,11 +1353,12 @@ void getgpsdualantangleete(const std::string& local_data, adma_msgs::msg::AdmaDa
 /// \brief  getgpsdualantangleete function - adma gps dual ant angle ete
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getinspositionheight(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getinspositionheight(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix)
 {
     char ins_height[] = {local_data[544],local_data[545],local_data[546],local_data[547]};
     memcpy(&message.insheight , &ins_height, sizeof(message.insheight));
     message.finsheight = message.insheight * 0.01;
+    msg_fix.altitude = message.finsheight;
 }
 
 /// \file
@@ -1390,7 +1422,7 @@ void getinspositionabs(const std::string& local_data, adma_msgs::msg::AdmaData& 
     char ins_lat_abs[] = {local_data[592],local_data[593],local_data[594],local_data[595]};
     memcpy(&message.inslatabs , &ins_lat_abs, sizeof(message.inslatabs));
     message.finslatabs = message.inslatabs * 0.0000001;
-    msg_fix.latitude = message.fgpslatabs;
+    msg_fix.latitude = message.finslatabs;
     char ins_lon_abs[] = {local_data[596],local_data[597],local_data[598],local_data[599]};
     memcpy(&message.inslonabs , &ins_lon_abs, sizeof(message.inslonabs));
     message.finslonabs = message.inslonabs * 0.0000001;
@@ -1775,7 +1807,7 @@ void getinsvelhorxyzpos8(const std::string& local_data, adma_msgs::msg::AdmaData
 /// \brief  getinsepe function - adma ins sepe
 /// \param  local_data adma string
 /// \param  message adma message to be loaded
-void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix)
 {
     //! ins epe
     char ins_stddev_lat[] = {local_data[816],local_data[817]};
@@ -1787,12 +1819,18 @@ void getinsepe(const std::string& local_data, adma_msgs::msg::AdmaData& message)
     char ins_stddev_height[] = {local_data[820],local_data[821]};
     memcpy(&message.insstddevheight , &ins_stddev_height, sizeof(message.insstddevheight));
     message.finsstddevheight = message.insstddevheight * 0.01;
+
+    // Components of position_covarionce are in East-North-Up order
+    msg_fix.position_covariance[0] = message.finsstddevlat*message.finsstddevlat;
+    msg_fix.position_covariance[4] = message.finsstddevlong*message.finsstddevlong;
+    msg_fix.position_covariance[8] = message.finsstddevheight*message.finsstddevheight;
+    msg_fix.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 }
 
 /// \file
 /// \brief  getinseveandete function - adma ins eve and ete
 /// \param  message adma message to be loaded
-void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& message)
+void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::Imu& msg_imu)
 {
     //! ins eve and ins ete
     char ins_stddev_vel_x[] = {local_data[824]};
@@ -1813,6 +1851,16 @@ void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& me
     char ins_stddev_yaw[] = {local_data[829]};
     memcpy(&message.insstddevyaw , &ins_stddev_yaw, sizeof(message.insstddevyaw));
     message.finsstddevyaw = message.insstddevyaw * 0.01;
+
+    msg_imu.orientation_covariance[0] = message.finsstddevroll * M_PI/180 * message.finsstddevroll * M_PI/180;
+    msg_imu.orientation_covariance[4] = message.finsstddevpitch * M_PI/180 * message.finsstddevpitch * M_PI/180;
+    msg_imu.orientation_covariance[8] = message.finsstddevyaw * M_PI/180 * message.finsstddevyaw * M_PI/180;
+
+    // ADMA does not provide covariance for linear acceleration and angular velocity.
+    // These values need to be measured at standstill each ADMA model.
+    msg_imu.angular_velocity_covariance[0] = -1;
+    msg_imu.linear_acceleration_covariance[0] = -1;
+
 }
 
 /// \file

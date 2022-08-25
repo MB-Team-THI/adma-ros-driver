@@ -15,12 +15,14 @@ find_package(rclcpp REQUIRED)
 find_package(adma_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system date_time)
 
 include_directories(
   include
   ${adma_msgs_INCLUDE_DIRS}
-  SYSTEM {Boost_INCLUDE_DIRS}
+  SYSTEM ${Boost_INCLUDE_DIRS}
 )
 
 add_library(adma_connect_core
@@ -29,6 +31,10 @@ add_library(adma_connect_core
 
 ament_target_dependencies(adma_connect_core
   adma_msgs
+  std_msgs
+  sensor_msgs
+  tf2_ros
+  tf2_geometry_msgs
 )
 
 
@@ -71,6 +77,11 @@ install(TARGETS
 install(TARGETS
   adma_connect_core
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
