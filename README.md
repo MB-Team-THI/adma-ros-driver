@@ -1,3 +1,8 @@
+# Please Note
+This ADMA ROS Driver is **legacy**, a **new version** of the Driver has been released at https://github.com/GeneSysElektronik/adma_ros_driver. 
+There are many new features and a completly rework of the ROS2 driver. 
+
+
 # ADMA Format Version: 3.3.3 - GPS Receiver for ROS
 
 - Tested with ROS-Melodic and Ubuntu 18
